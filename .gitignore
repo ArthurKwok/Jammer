@@ -1,2 +1,4 @@
 *.tar.gz
+*.wav
 /mma-bin-20.02
+downloads/
