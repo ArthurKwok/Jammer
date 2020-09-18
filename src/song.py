@@ -30,11 +30,26 @@ class Song(object):
 
     @style.validator
     def check_style(self, attribute, value):
-
         if value not in self.supported_styles:
             raise ValueError(f"Unsupported song style: {value}")
+    
+    @tempo.validator
+    def check_tempo(self, attribute, value):
+        if value < 40 or value > 250:
+            raise ValueError(f"Invalid tempo value: {tempo}")
 
-
+    @pattern_progression.validator
+    def check_pp(self, attribute, value):
+        if len(value) != 3:
+            raise ValueError(f"Invalid pattern progression length: {len(value)}")
+        if value[0] < 0 or value[1] < 0 or value[2] < 0 or \
+           value[1] < value[0] or value[2] < value[1] or value[2] < value[0]:
+           raise ValueError(f"Invalid pattern progression value: {value}")
+        if value[0] > len(self.chord_progression.split("\n"))-1 or \
+           value[1] > len(self.chord_progression.split("\n"))-1 or \
+           value[2] > len(self.chord_progression.split("\n"))-1:
+           raise ValueError(f"Invalid pattern progression, must be smaller than chord progression : {value}")
+    
     def build_mma(self, mma_path, verbose=False)->str:
         """build mma file from Song class
 
@@ -44,10 +59,8 @@ class Song(object):
             print("File already exists: {}, overwriting.".format(mma_path))
 
         # Choose Groove
-        groove = {"Intro": None,
-                  "Main1": None,
-                  "Main2": None,
-                  "Outro": None}
+        groove = {"Intro": None, "Main1": None, "Main2": None, "Outro": None}
+        
         if self.style is "Pop":
             groove["Intro"] = "PopBalladIntro"
             groove["Main1"] = "PopBallad"
@@ -146,7 +159,7 @@ class Song(object):
 
 if __name__ == "__main__":
     my_song = Song(name="my song",
-                    style="Pop",
+                    style="Folk",
                     tempo=100,
                     chord_progression="Dm7\nG7\nCM7\nCM7\nDm7\nG7\nCM7\nCM7\nDm7\nG7\nCM7\nCM7\nDm7\nG7\nCM7\nCM7\n",
                     pattern_progression=[3, 8, 15])
