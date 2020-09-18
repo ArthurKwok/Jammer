@@ -2,3 +2,4 @@
 *.wav
 /mma-bin-20.02
 downloads/
+.ipynb_checkpoints/
