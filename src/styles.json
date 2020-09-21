@@ -1,0 +1,54 @@
+{
+    "_commemt": 
+    [
+        "This is a manually edited json file to save styles.",
+        "To add a new style, create an elment in supported styles,",
+        "then add an element in styles with four elements: Intro, Main1, Main2 and Outro.",
+        "Values are MMA groove names.",
+        "All style names must be in lower case."
+    ],
+
+    "supported_styles": 
+    [
+        "pop", 
+        "rock", 
+        "jazz", 
+        "folk"
+    ],
+    
+    "styles":
+    {
+        "pop":
+        {
+            "Intro": "PopBalladIntro",
+            "Main1": "PopBallad",
+            "Main2": "PopBallad2Plus",
+            "Outro": "PopBalladEnd"
+        },
+
+        "rock":
+        {
+            "Intro": "Rock1A",
+            "Main1": "50s_RockA",
+            "Main2": "50s_RockB",
+            "Outro": "50s_RockEndingC"
+        },
+
+        "jazz":
+        {
+            "Intro": "SlowJazzIntro",
+            "Main1": "SlowJazz",
+            "Main2": "SlowJazzSus",
+            "Outro": "SlowJazzEnd"
+        },
+
+        "folk":
+        {
+            "Intro": "FolkRockIntro",
+            "Main1": "FolkRock",
+            "Main2": "FolkRockSusPlus",
+            "Outro": "FolkRockEnd"
+        }
+    }
+
+}

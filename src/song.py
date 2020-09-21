@@ -1,8 +1,9 @@
 import os
-import numpy as np
+# import numpy as np
 # import music21
 import attr
-from typing import Tuple
+import json
+
 
 @attr.s(kw_only=True)
 class Song(object):
@@ -13,26 +14,16 @@ class Song(object):
                           Bar count starts at 1, not 0.
     """
     name = attr.ib(type=str, default="untitled")
-    style = attr.ib(type=str)
+    genre = attr.ib(type=str)
     tempo = attr.ib(type=int)
     chord_progression = attr.ib(type=str)
     pattern_progression = attr.ib(type=list)
+    style_path = attr.ib(type=str, default="./style.json")
 
-    supported_styles = ["Pop",
-                        "Rock",
-                        "Jazz",
-                        "Folk"]
 
-    #TODO: assign style-related instrument and groove
-    #TODO: add song structure(intro, outro, repeat, ...)
-
-    groove = attr.ib(type=str, init=False)
-
-    @style.validator
-    def check_style(self, attribute, value):
-        if value not in self.supported_styles:
-            raise ValueError(f"Unsupported song style: {value}")
-    
+    #
+    # init functions 
+    #
     @tempo.validator
     def check_tempo(self, attribute, value):
         if value < 40 or value > 250:
@@ -49,7 +40,23 @@ class Song(object):
            value[1] > len(self.chord_progression.split("\n"))-1 or \
            value[2] > len(self.chord_progression.split("\n"))-1:
            raise ValueError(f"Invalid pattern progression, must be smaller than chord progression : {value}")
-    
+
+    def __attrs_post_init__(self):
+        self.genre = self.genre.lower()
+        with open("./styles.json", "r") as f:
+            f_json = json.load(f)
+            self.supported_styles = f_json["supported_styles"]
+            self.styles = f_json["styles"]
+
+        if self.genre not in self.supported_styles:
+            raise ValueError(f"Unsupported song style: {value}")
+
+        self.groove = self.styles[self.genre]
+
+
+    #
+    # class methods
+    #
     def build_mma(self, mma_path, verbose=False)->str:
         """build mma file from Song class
 
@@ -58,41 +65,17 @@ class Song(object):
         if os.path.exists(mma_path) and verbose:
             print("File already exists: {}, overwriting.".format(mma_path))
 
-        # Choose Groove
-        groove = {"Intro": None, "Main1": None, "Main2": None, "Outro": None}
-        
-        if self.style is "Pop":
-            groove["Intro"] = "PopBalladIntro"
-            groove["Main1"] = "PopBallad"
-            groove["Main2"] = "PopBallad2Plus"
-            groove["Outro"] = "PopBalladEnd"
-        if self.style is "Rock":
-            groove["Intro"] = "Rock1A"
-            groove["Main1"] = "50s_RockA"
-            groove["Main2"] = "50s_RockB"
-            groove["Outro"] = "50s_RockEndingC"
-        if self.style is "Jazz":
-            groove["Intro"] = "SlowJazzIntro"
-            groove["Main1"] = "SlowJazz"
-            groove["Main2"] = "SlowJazzSus"
-            groove["Outro"] = "SlowJazzEnd"
-        if self.style is "Folk":
-            groove["Intro"] = "FolkRockIntro"
-            groove["Main1"] = "FolkRock"
-            groove["Main2"] = "FolkRockSusPlus"
-            groove["Outro"] = "FolkRockEnd"
-
         mma_string = ""
         mma_string += f"Tempo {self.tempo}\n"
-        mma_string += "\nGroove {}\n\n".format(groove["Intro"])
+        mma_string += "\nGroove {}\n\n".format(self.groove["Intro"])
 
         for bar_index, chord in enumerate(self.chord_progression.split("\n")[:-1]):
             if self.pattern_progression[0] == bar_index + 1:
-                mma_string += "\nGroove {}\n\n".format(groove["Main1"])
+                mma_string += "\nGroove {}\n\n".format(self.groove["Main1"])
             elif self.pattern_progression[1] == bar_index + 1:
-                mma_string += "\nGroove {}\n\n".format(groove["Main2"])
+                mma_string += "\nGroove {}\n\n".format(self.groove["Main2"])
             elif self.pattern_progression[2] == bar_index + 1:
-                mma_string += "\nGroove {}\n\n".format(groove["Outro"])
+                mma_string += "\nGroove {}\n\n".format(self.groove["Outro"])
             
             mma_string += f"{bar_index+1}\t{chord}\n"
 
@@ -159,7 +142,7 @@ class Song(object):
 
 if __name__ == "__main__":
     my_song = Song(name="my song",
-                    style="Folk",
+                    genre="Folk",
                     tempo=100,
                     chord_progression="Dm7\nG7\nCM7\nCM7\nDm7\nG7\nCM7\nCM7\nDm7\nG7\nCM7\nCM7\nDm7\nG7\nCM7\nCM7\n",
                     pattern_progression=[3, 8, 15])
