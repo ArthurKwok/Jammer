@@ -13,7 +13,15 @@
         "pop", 
         "rock", 
         "jazz", 
-        "folk"
+        "folk",
+        "salsa",
+        "waltz",
+        "twist",
+        "spiritual",
+        "bolero",
+        "chacha",
+        "funk",
+        "blues"
     ],
     
     "styles":
@@ -22,6 +30,7 @@
         {
             "Intro": "PopBalladIntro",
             "Main1": "PopBallad",
+            "Fill": "PopBallad1", 
             "Main2": "PopBallad2Plus",
             "Outro": "PopBalladEnd"
         },
@@ -30,6 +39,7 @@
         {
             "Intro": "Rock1A",
             "Main1": "50s_RockA",
+            "Fill": "50s_RockFillAA",
             "Main2": "50s_RockB",
             "Outro": "50s_RockEndingC"
         },
@@ -38,6 +48,7 @@
         {
             "Intro": "SlowJazzIntro",
             "Main1": "SlowJazz",
+            "Fill": "SlowJazzFill",
             "Main2": "SlowJazzSus",
             "Outro": "SlowJazzEnd"
         },
@@ -46,9 +57,83 @@
         {
             "Intro": "FolkRockIntro",
             "Main1": "FolkRock",
+            "Fill": "FolkRockFill",
             "Main2": "FolkRockSusPlus",
             "Outro": "FolkRockEnd"
+        },
+
+        "salsa":
+        {
+            "Intro": "SalsaIntro",
+            "Main1": "Salsa",
+            "Fill": "SalsaFill",
+            "Main2": "SalsaSusPlus",
+            "Outro": "SalsaEnd"
+        },
+
+        "waltz":
+        {
+            "Intro": "WaltzIntro",
+            "Main1": "Waltz",
+            "Fill": "Waltz1",
+            "Main2": "Waltz1WalkSus",
+            "Outro": "WaltzEnd"
+        },
+
+        "twist":
+        {
+            "Intro": "TwistIntro",
+            "Main1": "Twist4",
+            "Fill": "Twist",
+            "Main2": "TwistSus",
+            "Outro": "TwistEnd"
+        },
+
+        "spiritual":
+        {
+            "Intro": "SpiritualIntro",
+            "Main1": "Spiritual",
+            "Fill": "SpiritualPlus",
+            "Main2": "SpiritualSusPlus",
+            "Outro": "SpiritualEnd"
+        },
+
+        "bolero":
+        {
+            "Intro": "BoleroIntro",
+            "Main1": "Bolero",
+            "Fill": "BoleroFill",
+            "Main2": "BoleroAltSus",
+            "Outro": "BoleroEnd"
+        },
+
+        "chacha":
+        {
+            "Intro": "ChachaIntro",
+            "Main1": "Chacha",
+            "Fill": "ChaChaFill",
+            "Main2": "Chacha1Sus",
+            "Outro": "ChachaEnd"
+        },
+
+        "funk":
+        {
+            "Intro": "BVFunkIntro",
+            "Main1": "BVFunk",
+            "Fill": "BVFunkHorns",
+            "Main2": "BVFunkSus",
+            "Outro": "BVFunkEnd"
+        },
+
+        "blues":
+        {
+            "Intro": "BluesIntro",
+            "Main1": "Blues",
+            "Fill": "BluesTriple",
+            "Main2": "Blues1Sus",
+            "Outro": "BluesEnd"            
         }
+
     }
 
 }

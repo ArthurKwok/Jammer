@@ -73,7 +73,9 @@ class Song(object):
             if self.pattern_progression[0] == bar_index + 1:
                 mma_string += "\nGroove {}\n\n".format(self.groove["Main1"])
             elif self.pattern_progression[1] == bar_index + 1:
-                mma_string += "\nGroove {}\n\n".format(self.groove["Main2"])
+                mma_string += "\nGroove {}\n\n".format(self.groove["Fill"])
+            elif self.pattern_progression[1] == bar_index + 1:
+                mma_string += "\nGroove {}\n\n".format(self.groove["Main2"])+
             elif self.pattern_progression[2] == bar_index + 1:
                 mma_string += "\nGroove {}\n\n".format(self.groove["Outro"])
             
@@ -142,7 +144,7 @@ class Song(object):
 
 if __name__ == "__main__":
     my_song = Song(name="my song",
-                    genre="Folk",
+                    genre="jazz",
                     tempo=100,
                     chord_progression="Dm7\nG7\nCM7\nCM7\nDm7\nG7\nCM7\nCM7\nDm7\nG7\nCM7\nCM7\nDm7\nG7\nCM7\nCM7\n",
                     pattern_progression=[3, 8, 15])
