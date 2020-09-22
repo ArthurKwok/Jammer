@@ -23,7 +23,7 @@
         "funk",
         "blues"
     ],
-    
+
     "styles":
     {
         "pop":
@@ -49,7 +49,7 @@
             "Intro": "SlowJazzIntro",
             "Main1": "SlowJazz",
             "Fill": "SlowJazzFill",
-            "Main2": "SlowJazzSus",
+            "Main2": "SlowJazzWalkSus",
             "Outro": "SlowJazzEnd"
         },
 

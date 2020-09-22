@@ -72,16 +72,16 @@ class Song(object):
         for bar_index, chord in enumerate(self.chord_progression.split("\n")[:-1]):
             if self.pattern_progression[0] == bar_index + 1:
                 mma_string += "\nGroove {}\n\n".format(self.groove["Main1"])
-            elif self.pattern_progression[1] == bar_index + 1:
+            elif self.pattern_progression[1] == bar_index + 2:
                 mma_string += "\nGroove {}\n\n".format(self.groove["Fill"])
             elif self.pattern_progression[1] == bar_index + 1:
-                mma_string += "\nGroove {}\n\n".format(self.groove["Main2"])+
+                mma_string += "\nGroove {}\n\n".format(self.groove["Main2"])
             elif self.pattern_progression[2] == bar_index + 1:
                 mma_string += "\nGroove {}\n\n".format(self.groove["Outro"])
             
             mma_string += f"{bar_index+1}\t{chord}\n"
 
-        mma_string += "\nz\nz!"
+        # mma_string += "\nz\nz!"
 
         with open(mma_path, "w") as file:
             # header comments
@@ -145,7 +145,7 @@ class Song(object):
 if __name__ == "__main__":
     my_song = Song(name="my song",
                     genre="jazz",
-                    tempo=100,
+                    tempo=110,
                     chord_progression="Dm7\nG7\nCM7\nCM7\nDm7\nG7\nCM7\nCM7\nDm7\nG7\nCM7\nCM7\nDm7\nG7\nCM7\nCM7\n",
                     pattern_progression=[3, 8, 15])
 
@@ -153,3 +153,4 @@ if __name__ == "__main__":
 
     my_song.build("../output.mma", clear_temp=False, verbose=True)
     my_song.render_audio(soundfont_path=None, midi_path="../output.mid", audio_path="../output.wav", verbose=True)
+    # my_song.render_audio(soundfont_path="../downloads/Orpheus_18.06.2020.sf2", midi_path="../output.mid", audio_path="../output.wav", verbose=True)
