@@ -43,6 +43,7 @@ class Song(object):
 
     def __attrs_post_init__(self):
         self.genre = self.genre.lower()
+        # load style config file
         with open("./styles.json", "r") as f:
             f_json = json.load(f)
             self.supported_styles = f_json["supported_styles"]
