@@ -28,11 +28,11 @@
     {
         "pop":
         {
-            "Intro": "PopBalladIntro",
-            "Main1": "PopBallad",
-            "Fill": "PopBallad1", 
-            "Main2": "PopBallad2Plus",
-            "Outro": "PopBalladEnd"
+            "Intro": "jammer/pop:PopBalladIntro",
+            "Main1": "jammer/pop:PopBallad",
+            "Fill": "jammer/pop:PopBallad1", 
+            "Main2": "jammer/pop:PopBallad1Plus",
+            "Outro": "jammer/pop:PopBalladEnd"
         },
 
         "rock":
@@ -129,9 +129,9 @@
         {
             "Intro": "BluesIntro",
             "Main1": "Blues",
-            "Fill": "BluesTriple",
+            "Fill": "BluesTripleR",
             "Main2": "Blues1Sus",
-            "Outro": "BluesEnd"            
+            "Outro": "BluesEnd"   
         }
 
     }

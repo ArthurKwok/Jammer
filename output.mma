@@ -3,23 +3,23 @@
 
 Tempo 110
 
-Groove SlowJazzIntro
+Groove jammer/pop:PopBalladIntro
 
 1	Dm7
 2	G7
-
-Groove SlowJazz
-
 3	CM7
 4	CM7
+
+Groove jammer/pop:PopBallad
+
 5	Dm7
 6	G7
 
-Groove SlowJazzFill
+Groove jammer/pop:PopBallad1
 
 7	CM7
 
-Groove SlowJazzWalkSus
+Groove jammer/pop:PopBallad1Plus
 
 8	CM7
 9	Dm7
@@ -29,7 +29,7 @@ Groove SlowJazzWalkSus
 13	Dm7
 14	G7
 
-Groove SlowJazzEnd
+Groove jammer/pop:PopBalladEnd
 
 15	CM7
 16	CM7

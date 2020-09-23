@@ -66,6 +66,7 @@ class Song(object):
             print("File already exists: {}, overwriting.".format(mma_path))
 
         mma_string = ""
+        # mma_string += "Debug Debug=1 Runtime=1"
         mma_string += f"Tempo {self.tempo}\n"
         mma_string += "\nGroove {}\n\n".format(self.groove["Intro"])
 
@@ -81,7 +82,7 @@ class Song(object):
             
             mma_string += f"{bar_index+1}\t{chord}\n"
 
-        # mma_string += "\nz\nz!"
+        mma_string += "\nz\nz!"
 
         with open(mma_path, "w") as file:
             # header comments
@@ -136,7 +137,7 @@ class Song(object):
     def render_audio(self, soundfont_path, midi_path, audio_path, verbose=True):
         if soundfont_path is None:
             soundfont_path = "../downloads/FluidR3Mono_GM.sf3"
-        stream = os.popen(f"fluidsynth {soundfont_path} {midi_path} -F {audio_path}")
+        stream = os.popen(f"fluidsynth {soundfont_path} {midi_path} -F {audio_path} -g 0.7 --chorus 1 --reverb 0 -o synth.min-note-length=100")
         output = stream.read()
         if verbose:
             print(output)
@@ -144,13 +145,13 @@ class Song(object):
 
 if __name__ == "__main__":
     my_song = Song(name="my song",
-                    genre="jazz",
+                    genre="pop",
                     tempo=110,
                     chord_progression="Dm7\nG7\nCM7\nCM7\nDm7\nG7\nCM7\nCM7\nDm7\nG7\nCM7\nCM7\nDm7\nG7\nCM7\nCM7\n",
-                    pattern_progression=[3, 8, 15])
+                    pattern_progression=[5, 8, 15])
 
     # print(my_song.build_midi("/home/jovyan/workspace/MMA-playground/fella1.mma"))
 
     my_song.build("../output.mma", clear_temp=False, verbose=True)
-    my_song.render_audio(soundfont_path=None, midi_path="../output.mid", audio_path="../output.wav", verbose=True)
-    # my_song.render_audio(soundfont_path="../downloads/Orpheus_18.06.2020.sf2", midi_path="../output.mid", audio_path="../output.wav", verbose=True)
+    # my_song.render_audio(soundfont_path=None, midi_path="../output.mid", audio_path="../output_pop.wav", verbose=True)
+    my_song.render_audio(soundfont_path="../downloads/Orpheus_18.06.2020.sf2", midi_path="../output.mid", audio_path="../output_pop.oga", verbose=True)
