@@ -3,23 +3,23 @@
 
 Tempo 110
 
-Groove jammer/pop:PopBalladIntro
+Groove jammer/waltz:WaltzIntro
 
 1	Dm7
 2	G7
 3	CM7
 4	CM7
 
-Groove jammer/pop:PopBallad
+Groove jammer/waltz:Waltz
 
 5	Dm7
 6	G7
 
-Groove jammer/pop:PopBallad1
+Groove jammer/waltz:Waltz1
 
 7	CM7
 
-Groove jammer/pop:PopBallad1Plus
+Groove jammer/waltz:Waltz1WalkSus
 
 8	CM7
 9	Dm7
@@ -29,7 +29,7 @@ Groove jammer/pop:PopBallad1Plus
 13	Dm7
 14	G7
 
-Groove jammer/pop:PopBalladEnd
+Groove jammer/waltz:WaltzEnd
 
 15	CM7
 16	CM7

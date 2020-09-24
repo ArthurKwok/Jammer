@@ -46,38 +46,38 @@
 
         "jazz":
         {
-            "Intro": "SlowJazzIntro",
-            "Main1": "SlowJazz",
-            "Fill": "SlowJazzFill",
-            "Main2": "SlowJazzWalkSus",
-            "Outro": "SlowJazzEnd"
+            "Intro": "jammer/slowjazz:SlowJazzIntro",
+            "Main1": "jammer/slowjazz:SlowJazz",
+            "Fill": "jammer/slowjazz:SlowJazzFill",
+            "Main2": "jammer/slowjazz:SlowJazzWalkSus",
+            "Outro": "jammer/slowjazz:SlowJazzEnd"
         },
 
         "folk":
         {
-            "Intro": "FolkRockIntro",
-            "Main1": "FolkRock",
-            "Fill": "FolkRockFill",
-            "Main2": "FolkRockSusPlus",
-            "Outro": "FolkRockEnd"
+            "Intro": "jammer/folkrock:FolkRockIntro",
+            "Main1": "jammer/folkrock:FolkRock",
+            "Fill": "jammer/folkrock:FolkRockFill",
+            "Main2": "jammer/folkrock:FolkRockSusPlus",
+            "Outro": "jammer/folkrock:FolkRockEnd"
         },
 
         "salsa":
         {
-            "Intro": "SalsaIntro",
-            "Main1": "Salsa",
-            "Fill": "SalsaFill",
-            "Main2": "SalsaSusPlus",
-            "Outro": "SalsaEnd"
+            "Intro": "jammer/salsa:SalsaIntro",
+            "Main1": "jammer/salsa:Salsa",
+            "Fill": "jammer/salsa:SalsaFill",
+            "Main2": "jammer/salsa:SalsaSusPlus",
+            "Outro": "jammer/salsa:SalsaEnd"
         },
 
         "waltz":
         {
-            "Intro": "WaltzIntro",
-            "Main1": "Waltz",
-            "Fill": "Waltz1",
-            "Main2": "Waltz1WalkSus",
-            "Outro": "WaltzEnd"
+            "Intro": "jammer/waltz:WaltzIntro",
+            "Main1": "jammer/waltz:Waltz",
+            "Fill": "jammer/waltz:Waltz1",
+            "Main2": "jammer/waltz:Waltz1WalkSus",
+            "Outro": "jammer/waltz:WaltzEnd"
         },
 
         "twist":
@@ -118,20 +118,20 @@
 
         "funk":
         {
-            "Intro": "BVFunkIntro",
-            "Main1": "BVFunk",
-            "Fill": "BVFunkHorns",
-            "Main2": "BVFunkSus",
-            "Outro": "BVFunkEnd"
+            "Intro": "jammer/bvfunk:BVFunkIntro",
+            "Main1": "jammer/bvfunk:BVFunk",
+            "Fill": "jammer/bvfunk:BVFunkHorns",
+            "Main2": "jammer/bvfunk:BVFunkSus",
+            "Outro": "jammer/bvfunk:BVFunkEnd"
         },
 
         "blues":
         {
-            "Intro": "BluesIntro",
-            "Main1": "Blues",
-            "Fill": "BluesTripleR",
-            "Main2": "Blues1Sus",
-            "Outro": "BluesEnd"   
+            "Intro": "jammer/blues:BluesIntro",
+            "Main1": "jammer/blues:Blues",
+            "Fill": "jammer/blues:BluesTripleR",
+            "Main2": "jammer/blues:Blues1Sus",
+            "Outro": "jammer/blues:BluesEnd"   
         }
 
     }
