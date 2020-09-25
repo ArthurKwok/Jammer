@@ -1,3 +1,6 @@
+#Last modified: 25 Sep, 2020
+#Author: Arthur Jinyue Guo jg5505@nyu.edu
+
 import os
 # import numpy as np
 # import music21
