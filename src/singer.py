@@ -41,7 +41,9 @@ class Singer(object):
         self.chords = m2.stream.Part()
 
         for chord in self.chord_progression.split("\n")[:-1]:
-            self.chords.append(m2.harmony.ChordSymbol(chord))
+            c = m2.harmony.ChordSymbol(chord, duration=4)
+            c.volume = m2.volume.Volume(velocity=70)
+            self.chords.append(c)
         
         self.s.append(self.melody)
         # self.s.append(self.chords)
@@ -70,15 +72,20 @@ class Singer(object):
     #
     # class methods
     #
-    def sing_chord(self, speed: int):
+    def sing_chord(self, speed: int, rand_vol: int, rand_trig: float):
         """a singer who only sings the chord pitches. fills self.melody.
             basically same as a random arppegiator.
 
         Parameters
         ----------
         speed: must be power of 2, usually between 2 and 32.
+        rand_vol: range of random volume (0 to 127)
+        rand_trig: a possibility of notes being muted, 0 to 1 (0 will trigger all notes, 1 mutes all)
 
         """
+        default_volume = 90
+
+
         for current_chord in self.chords.elements:
             chord_tones = [pitch.name for pitch in current_chord.pitches]
             singable_pitchs = []
@@ -87,8 +94,15 @@ class Singer(object):
                     singable_pitchs.append(pitch.nameWithOctave)
 
             for i in range(speed):
-                current_pitch = np.random.choice(singable_pitchs)
-                self.melody.append(m2.note.Note(current_pitch, quarterLength=4/speed))
+                if np.random.rand() < rand_trig:
+                    n = m2.note.Rest()
+                else:
+                    current_pitch = np.random.choice(singable_pitchs)
+                    n = m2.note.Note(current_pitch)
+                    n.volume = m2.volume.Volume(velocity=default_volume+int(rand_vol*(2*np.random.rand()-1)))
+                n.duration = m2.duration.Duration(4/speed)
+
+                self.melody.append(n)
 
 
     def export_midi(self, midi_path, write_chords=False):
@@ -104,5 +118,5 @@ if __name__ == "__main__":
                        chord_progression="D\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\n",
                        pattern_progression=[5, 9, 13])
     
-    my_singer.sing_chord(4)
+    my_singer.sing_chord(speed=8, rand_vol=10, rand_trig=0.2)
     my_singer.export_midi("../singer_output.mid", write_chords=True)
