@@ -6,7 +6,7 @@ import os
 # import music21
 import attr
 import json
-
+from producer import Producer
 
 @attr.s(kw_only=True)
 class Song(object):
@@ -138,13 +138,6 @@ class Song(object):
         return midi_path        
 
 
-    def render_audio(self, soundfont_path, midi_path, audio_path, verbose=True):
-        if soundfont_path is None:
-            soundfont_path = "../downloads/FluidR3Mono_GM.sf3"
-        stream = os.popen(f"fluidsynth {soundfont_path} {midi_path} -F {audio_path} -g 0.7 --chorus 0 --reverb 0 -o synth.min-note-length=1000")
-        output = stream.read() 
-        if verbose:
-            print(output)
 
 
 if __name__ == "__main__":
@@ -158,4 +151,4 @@ if __name__ == "__main__":
 
     my_song.build("../output.mma", clear_temp=False, verbose=True)
     # my_song.render_audio(soundfont_path=None, midi_path="../output.mid", audio_path="../output_waltz.wav", verbose=True)
-    my_song.render_audio(soundfont_path="../downloads/Orpheus_18.06.2020.sf2", midi_path="../output.mid", audio_path="../output_waltz.oga", verbose=True)
+    Producer.render_audio(soundfont_path="../downloads/Orpheus_18.06.2020.sf2", midi_path="../output.mid", audio_path="../output_waltz.oga", verbose=True)

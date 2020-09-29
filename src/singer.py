@@ -6,7 +6,7 @@ import attr
 import json
 import numpy as np
 import music21 as m2
-
+from producer import Producer
 
 @attr.s()
 class Singer(object):
@@ -33,12 +33,11 @@ class Singer(object):
     #
     def __attrs_post_init__(self):
         # init the main stream object
-        self.s = m2.stream.Stream([m2.instrument.Instrument(self.instrument),
-                                # m2.tempo.MetronomeMark(self.tempo), 
+        self.s = m2.stream.Stream([m2.tempo.MetronomeMark(number=self.tempo), 
                                 m2.key.Key(self.key), 
                                 m2.meter.TimeSignature(self.time_signature)])
-        self.melody = m2.stream.Part()
-        self.chords = m2.stream.Part()
+        self.melody = m2.stream.Part([m2.instrument.Violin()])
+        self.chords = m2.stream.Part([m2.instrument.Piano()])
 
         for chord in self.chord_progression.split("\n")[:-1]:
             c = m2.harmony.ChordSymbol(chord, duration=4)
@@ -111,7 +110,7 @@ class Singer(object):
         """
         default_volume = 90
 
-        for current_chord in self.chords.elements:
+        for current_chord in self.chords.elements[1:]:
             chord_tones = [pitch.name for pitch in current_chord.pitches]
             singable_pitchs = []
             for pitch in self.possible_pitches:
@@ -167,11 +166,11 @@ class Singer(object):
         return interval_p
 
 
-
 if __name__ == "__main__":
-    my_singer = Singer(tempo=110, key="D", time_signature="4/4", 
+    my_singer = Singer(tempo=80, key="D", time_signature="4/4", 
                        chord_progression="D\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\n",
                        pattern_progression=[5, 9, 13])
     
-    my_singer.sing_interval(speed=8, rand_vol=10, rand_trig=0.2)
+    my_singer.sing_interval(speed=4, rand_vol=10, rand_trig=0.2)
     my_singer.export_midi("../singer_output.mid", write_chords=True)
+    Producer.render_audio(soundfont_path="../downloads/Orpheus_18.06.2020.sf2", midi_path="../singer_output.mid", audio_path="../singer_output.oga", verbose=True)

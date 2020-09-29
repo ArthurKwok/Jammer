@@ -2,6 +2,7 @@
 *.wav
 *.oga
 *.mmaDB
+__pycache__/
 !output_pop.oga
 downloads/
 .ipynb_checkpoints/
