@@ -6,7 +6,6 @@ import attr
 import json
 import numpy as np
 import music21 as m2
-from producer import Producer
 
 @attr.s()
 class Singer(object):
@@ -167,10 +166,10 @@ class Singer(object):
 
 
 if __name__ == "__main__":
-    my_singer = Singer(tempo=80, key="D", time_signature="4/4", 
+    my_singer = Singer(tempo=110, key="D", time_signature="4/4", 
                        chord_progression="D\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\n",
                        pattern_progression=[5, 9, 13])
     
     my_singer.sing_interval(speed=4, rand_vol=10, rand_trig=0.2)
-    my_singer.export_midi("../singer_output.mid", write_chords=True)
-    Producer.render_audio(soundfont_path="../downloads/Orpheus_18.06.2020.sf2", midi_path="../singer_output.mid", audio_path="../singer_output.oga", verbose=True)
+    my_singer.export_midi("../singer_output.mid", write_chords=False)
+    Producer.render_audio(soundfont_path="../downloads/Orpheus_18.06.2020.sf2", midi_path="../singer_output.mid", audio_path="../singer_output.wav", verbose=True)

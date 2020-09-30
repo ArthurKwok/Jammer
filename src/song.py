@@ -6,7 +6,6 @@ import os
 # import music21
 import attr
 import json
-from producer import Producer
 
 @attr.s(kw_only=True)
 class Song(object):
@@ -142,13 +141,14 @@ class Song(object):
 
 if __name__ == "__main__":
     my_song = Song(name="my song",
-                    genre="waltz",
+                    genre="pop",
                     tempo=110,
-                    chord_progression="Dm7\nG7\nCM7\nCM7\nDm7\nG7\nCM7\nCM7\nDm7\nG7\nCM7\nCM7\nDm7\nG7\nCM7\nCM7\n",
+                    chord_progression="D\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\n",
+                    # chord_progression="Dm7\nG7\nCM7\nCM7\nDm7\nG7\nCM7\nCM7\nDm7\nG7\nCM7\nCM7\nDm7\nG7\nCM7\nCM7\n",
                     pattern_progression=[5, 8, 15])
 
     # print(my_song.build_midi("/home/jovyan/workspace/MMA-playground/fella1.mma"))
 
     my_song.build("../output.mma", clear_temp=False, verbose=True)
-    # my_song.render_audio(soundfont_path=None, midi_path="../output.mid", audio_path="../output_waltz.wav", verbose=True)
-    Producer.render_audio(soundfont_path="../downloads/Orpheus_18.06.2020.sf2", midi_path="../output.mid", audio_path="../output_waltz.oga", verbose=True)
+    # my_song.render_audio(soundfont_path=None, midi_path="../output.mid", audio_path="../output_pop.wav", verbose=True)
+    Producer.render_audio(soundfont_path="../downloads/Orpheus_18.06.2020.sf2", midi_path="../output.mid", audio_path="../output_pop.wav", verbose=True)

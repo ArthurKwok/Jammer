@@ -5,6 +5,7 @@
 __pycache__/
 !output_pop.oga
 downloads/
+temp/
 .ipynb_checkpoints/
 /mma-bin-20.02/*
 !/mma-bin-20.02/lib
