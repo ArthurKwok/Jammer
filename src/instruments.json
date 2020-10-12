@@ -1,0 +1,44 @@
+{
+    "_commemt": 
+    [
+        "This is a manually edited json file to save instruments used by singer.py .",
+        "Names must be exactly same as in this list: https://web.mit.edu/music21/doc/moduleReference/moduleInstrument.html"
+    ],
+
+    "supported_instruments": 
+    [
+        "Violin",
+        "Flute",
+        "TenorSaxophone"
+    ],
+
+    "instruments":
+    {
+        "Violin":
+        {
+            "sound_range_low": "C4",
+            "sound_range_high": "G5",
+            "speed": [4, 8, 16],
+            "rand_vol": 10,
+            "rand_trig": 0.2
+        },
+
+        "Flute":
+        {
+            "sound_range_low": "C4",
+            "sound_range_high": "G5",
+            "speed": [4, 8, 16],
+            "rand_vol": 10,
+            "rand_trig": 0.2
+        },
+
+        "TenorSaxophone":
+        {
+            "sound_range_low": "C3",
+            "sound_range_high": "G5",
+            "speed": [4, 8, 16],
+            "rand_vol": 10,
+            "rand_trig": 0.2
+        }
+    }
+}

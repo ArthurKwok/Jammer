@@ -1,7 +1,7 @@
 {
     "_commemt": 
     [
-        "This is a manually edited json file to save styles.",
+        "This is a manually edited json file to save styles used by song.py .",
         "To add a new style, create an elment in supported styles,",
         "then add an element in styles with four elements: Intro, Main1, Main2 and Outro.",
         "Values are MMA groove names.",
