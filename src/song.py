@@ -20,7 +20,7 @@ class Song(object):
     tempo = attr.ib(type=int)
     chord_progression = attr.ib(type=str)
     pattern_progression = attr.ib(type=list)
-    style_path = attr.ib(type=str, default="./style.json")
+    style_path = attr.ib(type=str, default="./styles.json")
 
 
     #
@@ -46,15 +46,15 @@ class Song(object):
     def __attrs_post_init__(self):
         self.genre = self.genre.lower()
         # load style config file
-        with open("./styles.json", "r") as f:
+        with open(self.style_path, "r") as f:
             f_json = json.load(f)
-            self.supported_styles = f_json["supported_styles"]
-            self.styles = f_json["styles"]
+            supported_styles = f_json["supported_styles"]
+            styles = f_json["styles"]
 
-        if self.genre not in self.supported_styles:
+        if self.genre not in supported_styles:
             raise ValueError(f"Unsupported song style: {value}")
 
-        self.groove = self.styles[self.genre]
+        self.groove = styles[self.genre]
 
 
     #

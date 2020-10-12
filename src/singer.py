@@ -33,6 +33,7 @@ class Singer(object):
     instrument = attr.ib(type=str, default="Violin")
     key = attr.ib(type=str, default="C")
     time_signature = attr.ib(type=str, default="4/4")
+    instrument_path = attr.ib(type=str, default="./instruments.json")
     sound_range = attr.ib(type=tuple, default=('C4', 'G5'))
     # note generation attrs
     speed = attr.ib(type=int, default=4)
@@ -43,6 +44,17 @@ class Singer(object):
     # init functions 
     #
     def __attrs_post_init__(self):
+        # load instrument config file
+        with open(self.instrument_path, "r") as f:
+            f_json = json.load(f)
+            supported_instruments = f_json["supported_instruments"]
+            instruments = f_json["instruments"]
+    
+        if self.instrument not in supported_instruments:
+            raise ValueError(f"Unsupported instrument: {self.instrument}")
+
+        self.inst_settings = instruments[self.instrument]
+
         # init the main stream object
         self.s = m2.stream.Stream([m2.tempo.MetronomeMark(number=self.tempo), 
                                 m2.key.Key(self.key), 
@@ -60,7 +72,7 @@ class Singer(object):
         # self.s.append(self.chords)
 
         # all the possible pitches within the sound range and in the key.
-        self.possible_pitches = self.s.keySignature.getScale().getPitches(self.sound_range[0], self.sound_range[1])
+        self.possible_pitches = self.s.keySignature.getScale().getPitches(self.inst_settings["sound_range_low"], self.inst_settings["sound_range_high"])
 
     @tempo.validator
     def check_tempo(self, attribute, value):
@@ -88,7 +100,7 @@ class Singer(object):
             basically same as a random arppegiator.
         """
         default_volume = 90
-
+        speed = np.random.choice(self.inst_settings["speed"])
         for current_chord in self.chords.elements:
             chord_tones = [pitch.name for pitch in current_chord.pitches]
             singable_pitchs = []
@@ -96,13 +108,13 @@ class Singer(object):
                 if pitch.name in chord_tones:
                     singable_pitchs.append(pitch.nameWithOctave)
 
-            for i in range(self.speed):
-                if np.random.rand() < self.rand_trig:
+            for i in range(speed):
+                if np.random.rand() < self.inst_settings["rand_trig"]:
                     n = m2.note.Rest()
                 else:
                     current_pitch = np.random.choice(singable_pitchs)
                     n = m2.note.Note(current_pitch)
-                    n.volume = m2.volume.Volume(velocity=default_volume+int(self.rand_vol*(2*np.random.rand()-1)))
+                    n.volume = m2.volume.Volume(velocity=default_volume+int(self.inst_settings["rand_vol"]*(2*np.random.rand()-1)))
                 n.duration = m2.duration.Duration(4/speed)
 
                 self.melody.append(n)
@@ -113,7 +125,7 @@ class Singer(object):
         Sing according to interval with the previous note. closer note will have higher probability.
         """
         default_volume = 90
-
+        speed = np.random.choice(self.inst_settings["speed"])
         for current_chord in self.chords.elements[1:]:
             chord_tones = [pitch.name for pitch in current_chord.pitches]
             singable_pitchs = []
@@ -121,8 +133,8 @@ class Singer(object):
                 if pitch.name in chord_tones:
                     singable_pitchs.append(pitch.nameWithOctave)
 
-            for i in range(self.speed):
-                if np.random.rand() < self.rand_trig:
+            for i in range(speed):
+                if np.random.rand() < self.inst_settings["rand_trig"]:
                     n = m2.note.Rest()
                 else:
                     if len(self.melody.notes) == 0:
@@ -131,8 +143,8 @@ class Singer(object):
                         interval_p = self.interval_reversed_p(self.melody.notes[-1].pitch, singable_pitchs)
                         current_pitch = np.random.choice(singable_pitchs, p=interval_p)
                     n = m2.note.Note(current_pitch)
-                    n.volume = m2.volume.Volume(velocity=default_volume+int(self.rand_vol*(2*np.random.rand()-1)))
-                n.duration = m2.duration.Duration(4/self.speed)
+                    n.volume = m2.volume.Volume(velocity=default_volume+int(self.inst_settings["rand_vol"]*(2*np.random.rand()-1)))
+                n.duration = m2.duration.Duration(4/speed)
 
                 self.melody.append(n)
 
@@ -172,9 +184,10 @@ class Singer(object):
 
 if __name__ == "__main__":
     my_singer = Singer(tempo=110, key="D", time_signature="4/4", 
+                       instrument="TenorSaxophone",
                        chord_progression="D\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\n",
                        pattern_progression=[5, 9, 13])
     
-    my_singer.sing_interval(speed=4, rand_vol=10, rand_trig=0.2)
+    my_singer.sing_interval()
     my_singer.export_midi("../singer_output.mid", write_chords=False)
-    Producer.render_audio(soundfont_path="../downloads/Orpheus_18.06.2020.sf2", midi_path="../singer_output.mid", audio_path="../singer_output.wav", verbose=True)
+    # Producer.render_audio(soundfont_path="../downloads/Orpheus_18.06.2020.sf2", midi_path="../singer_output.mid", audio_path="../singer_output.wav", verbose=True)

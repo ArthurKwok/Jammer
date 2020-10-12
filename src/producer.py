@@ -124,9 +124,7 @@ if __name__ == "__main__":
                        "time_signature": "4/4", 
                        "chord_progression": cp,
                        "pattern_progression": [5, 9, 13],
-                       "speed": 8,
-                       "instrument": "TenorSaxophone",
-                       "sound_range": ("C3", "G4")}
+                       "instrument": "TenorSaxophone"}
                     #    "instrument": "Violin"}
 
     my_producer = Producer(song_settings, singer_settings)
