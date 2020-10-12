@@ -27,12 +27,18 @@ class Producer(object):
     # static methods
     #
     @staticmethod
-    def render_audio(midi_path, audio_path, soundfont_path="../downloads/FluidR3Mono_GM.sf3", gain=0.7, chorus=0, reverb=0, verbose=True):
+    def render_audio(midi_path: str, audio_path: str, soundfont_path="../downloads/FluidR3Mono_GM.sf3", gain=0.7, chorus=0, reverb=0, verbose=True):
         """
         Renders the input midi file to an audio file using fluidsynth and a specified soundfont.
         instrument and note assignments follows the General MIDI (GM) protocol.
 
         There are two simple effects included in MIDI GM, chorus and reverb, but we can only control the on/off, not the mix.
+
+        Parameters
+        ----------
+        gain: the master gain. default value is 0.3 for fluidsynth, which is too small.
+        chorus: a binary boolean controlling the chorus switch. CAN NOT BE FLOAT!
+        reverb: a binary boolean controlling the reverb switch. CAN NOT BE FLOAT!
         """
         stream = os.popen(f"fluidsynth {soundfont_path} {midi_path} -F {audio_path} -g {gain} --chorus {chorus} --reverb {reverb} -o synth.min-note-length=1000")
         output = stream.read()
@@ -55,7 +61,7 @@ class Producer(object):
         print(s1.elements[1].elements)
         # s1.write("midi", midi_out_path)
         # print(f"midi file written at {midi_out_path}")
-    
+
 
     @staticmethod
     def merge_audio(audio_in_1_path: str, audio_in_2_path: str, mix: float, audio_out_path: str):
@@ -77,7 +83,7 @@ class Producer(object):
     #
     # class methods
     #
-    def build(self, output_path="../producer_output.wav", remove_temp=True):
+    def build(self, mix=0.5, output_path="../producer_output.wav", remove_temp=True):
         """
         build the final output .wav file.
 
@@ -89,11 +95,11 @@ class Producer(object):
         os.mkdir("../temp/")
 
         self.song.build("../temp/output.mma") # generates the accompany midi file
-        self.singer.sing_interval(4, 10, 0.2) 
+        self.singer.sing_interval() 
         self.singer.export_midi("../temp/singer_output.mid") # generates the melody midi file
         Producer.render_audio(soundfont_path="../downloads/Orpheus_18.06.2020.sf2", midi_path="../temp/output.mid", audio_path="../temp/output.wav", verbose=True)
         Producer.render_audio(soundfont_path="../downloads/Orpheus_18.06.2020.sf2", midi_path="../temp/singer_output.mid", audio_path="../temp/singer_output.wav", verbose=True)
-        Producer.merge_audio("../temp/output.wav", "../temp/singer_output.wav", mix=0.5, audio_out_path=output_path)
+        Producer.merge_audio("../temp/output.wav", "../temp/singer_output.wav", mix=mix, audio_out_path=output_path)
 
         print(f"audio file exported at {output_path}")
 
@@ -117,7 +123,11 @@ if __name__ == "__main__":
                        "key": "D",
                        "time_signature": "4/4", 
                        "chord_progression": cp,
-                       "pattern_progression": [5, 9, 13]}
+                       "pattern_progression": [5, 9, 13],
+                       "speed": 8,
+                       "instrument": "TenorSaxophone",
+                       "sound_range": ("C3", "G4")}
+                    #    "instrument": "Violin"}
 
     my_producer = Producer(song_settings, singer_settings)
-    my_producer.build()
+    my_producer.build(mix=0.3, remove_temp=False)

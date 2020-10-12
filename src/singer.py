@@ -17,6 +17,14 @@ class Singer(object):
     key: key signature in music21 format.
     chord_progression: the chords in ROMAN NUMERAL relative to key.
     instrument: the instrument to use when generating midi file. Names are defined in General Midi protocol.
+                supported instruments (must be exact name): https://web.mit.edu/music21/doc/moduleReference/moduleInstrument.html
+                recommended: Violin, Flute, TenorSaxophone, ...
+
+    # note generator settings
+    # recommend setting: speed=4/8/16, rand_vol=10, rand_trig=0.2
+    speed: must be power of 2, usually between 2 and 32.
+    rand_vol: range of random volume (0 to 127)
+    rand_trig: a possibility of notes being muted, 0 to 1 (0 will trigger all notes, 1 mutes all)
     """
 
     tempo = attr.ib(type=int)
@@ -26,6 +34,10 @@ class Singer(object):
     key = attr.ib(type=str, default="C")
     time_signature = attr.ib(type=str, default="4/4")
     sound_range = attr.ib(type=tuple, default=('C4', 'G5'))
+    # note generation attrs
+    speed = attr.ib(type=int, default=4)
+    rand_vol = attr.ib(type=int, default=10)
+    rand_trig = attr.ib(type=float, default=0.2)
 
     #
     # init functions 
@@ -35,7 +47,8 @@ class Singer(object):
         self.s = m2.stream.Stream([m2.tempo.MetronomeMark(number=self.tempo), 
                                 m2.key.Key(self.key), 
                                 m2.meter.TimeSignature(self.time_signature)])
-        self.melody = m2.stream.Part([m2.instrument.Violin()])
+        instrument_class = getattr(m2.instrument, self.instrument)
+        self.melody = m2.stream.Part([instrument_class()])
         self.chords = m2.stream.Part([m2.instrument.Piano()])
 
         for chord in self.chord_progression.split("\n")[:-1]:
@@ -70,17 +83,9 @@ class Singer(object):
     #
     # class methods
     #
-    def sing_chord(self, speed: int, rand_vol: int, rand_trig: float):
+    def sing_chord(self):
         """a singer who only sings the chord pitches. fills self.melody.
             basically same as a random arppegiator.
-
-        Parameters
-        ----------
-        speed: must be power of 2, usually between 2 and 32.
-        rand_vol: range of random volume (0 to 127)
-        rand_trig: a possibility of notes being muted, 0 to 1 (0 will trigger all notes, 1 mutes all)
-
-        recommend setting: speed=4/8/16, rand_vol=10, rand_trig=0.2
         """
         default_volume = 90
 
@@ -91,19 +96,19 @@ class Singer(object):
                 if pitch.name in chord_tones:
                     singable_pitchs.append(pitch.nameWithOctave)
 
-            for i in range(speed):
-                if np.random.rand() < rand_trig:
+            for i in range(self.speed):
+                if np.random.rand() < self.rand_trig:
                     n = m2.note.Rest()
                 else:
                     current_pitch = np.random.choice(singable_pitchs)
                     n = m2.note.Note(current_pitch)
-                    n.volume = m2.volume.Volume(velocity=default_volume+int(rand_vol*(2*np.random.rand()-1)))
+                    n.volume = m2.volume.Volume(velocity=default_volume+int(self.rand_vol*(2*np.random.rand()-1)))
                 n.duration = m2.duration.Duration(4/speed)
 
                 self.melody.append(n)
 
 
-    def sing_interval(self, speed, rand_vol, rand_trig):
+    def sing_interval(self):
         """
         Sing according to interval with the previous note. closer note will have higher probability.
         """
@@ -116,8 +121,8 @@ class Singer(object):
                 if pitch.name in chord_tones:
                     singable_pitchs.append(pitch.nameWithOctave)
 
-            for i in range(speed):
-                if np.random.rand() < rand_trig:
+            for i in range(self.speed):
+                if np.random.rand() < self.rand_trig:
                     n = m2.note.Rest()
                 else:
                     if len(self.melody.notes) == 0:
@@ -126,10 +131,10 @@ class Singer(object):
                         interval_p = self.interval_reversed_p(self.melody.notes[-1].pitch, singable_pitchs)
                         current_pitch = np.random.choice(singable_pitchs, p=interval_p)
                     n = m2.note.Note(current_pitch)
-                    n.volume = m2.volume.Volume(velocity=default_volume+int(rand_vol*(2*np.random.rand()-1)))
-                n.duration = m2.duration.Duration(4/speed)
+                    n.volume = m2.volume.Volume(velocity=default_volume+int(self.rand_vol*(2*np.random.rand()-1)))
+                n.duration = m2.duration.Duration(4/self.speed)
 
-                self.melody.append(n)       
+                self.melody.append(n)
 
 
     def export_midi(self, midi_path, write_chords=False):
