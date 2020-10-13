@@ -1,0 +1,142 @@
+{
+    "_commemt": 
+    [
+        "This is a manually edited json file to save genres used by producer.py .",
+    ],
+
+    "supported_genres": 
+    [
+        "pop",
+        "rock",
+        "jazz",
+        "folk",
+        "salsa",
+        "waltz",
+        "twist",
+        "spiritual",
+        "bolero",
+        "chacha",
+        "funk",
+        "blues"
+    ],
+
+    "genres":
+    {
+        "pop":
+        {
+            "chord_progression":
+            {
+                "Intro": "D\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\n",
+                "Main1": "D\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\n",
+                "Fill": "G\nA7\n", 
+                "Main2": "D\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\n",
+                "Outro": "A7\nD\nBm\nG\nA7\nD"
+            },
+
+            "tempo_range": [100, 120],
+            
+            "singer_instruments": ["Violin", "Flute", "TenorSaxophone"]
+        },
+
+        "rock":
+        {
+            "Intro": "Rock1A",
+            "Main1": "50s_RockA",
+            "Fill": "50s_RockFillAA",
+            "Main2": "50s_RockB",
+            "Outro": "50s_RockEndingC"
+        },
+
+        "jazz":
+        {
+            "Intro": "jammer/slowjazz:SlowJazzIntro",
+            "Main1": "jammer/slowjazz:SlowJazz",
+            "Fill": "jammer/slowjazz:SlowJazzFill",
+            "Main2": "jammer/slowjazz:SlowJazzWalkSus",
+            "Outro": "jammer/slowjazz:SlowJazzEnd"
+        },
+
+        "folk":
+        {
+            "Intro": "jammer/folkrock:FolkRockIntro",
+            "Main1": "jammer/folkrock:FolkRock",
+            "Fill": "jammer/folkrock:FolkRockFill",
+            "Main2": "jammer/folkrock:FolkRockSusPlus",
+            "Outro": "jammer/folkrock:FolkRockEnd"
+        },
+
+        "salsa":
+        {
+            "Intro": "jammer/salsa:SalsaIntro",
+            "Main1": "jammer/salsa:Salsa",
+            "Fill": "jammer/salsa:SalsaFill",
+            "Main2": "jammer/salsa:SalsaSusPlus",
+            "Outro": "jammer/salsa:SalsaEnd"
+        },
+
+        "waltz":
+        {
+            "Intro": "jammer/waltz:WaltzIntro",
+            "Main1": "jammer/waltz:Waltz",
+            "Fill": "jammer/waltz:Waltz1",
+            "Main2": "jammer/waltz:Waltz1WalkSus",
+            "Outro": "jammer/waltz:WaltzEnd"
+        },
+
+        "twist":
+        {
+            "Intro": "TwistIntro",
+            "Main1": "Twist4",
+            "Fill": "Twist",
+            "Main2": "TwistSus",
+            "Outro": "TwistEnd"
+        },
+
+        "spiritual":
+        {
+            "Intro": "SpiritualIntro",
+            "Main1": "Spiritual",
+            "Fill": "SpiritualPlus",
+            "Main2": "SpiritualSusPlus",
+            "Outro": "SpiritualEnd"
+        },
+
+        "bolero":
+        {
+            "Intro": "BoleroIntro",
+            "Main1": "Bolero",
+            "Fill": "BoleroFill",
+            "Main2": "BoleroAltSus",
+            "Outro": "BoleroEnd"
+        },
+
+        "chacha":
+        {
+            "Intro": "ChachaIntro",
+            "Main1": "Chacha",
+            "Fill": "ChaChaFill",
+            "Main2": "Chacha1Sus",
+            "Outro": "ChachaEnd"
+        },
+
+        "funk":
+        {
+            "Intro": "jammer/bvfunk:BVFunkIntro",
+            "Main1": "jammer/bvfunk:BVFunk",
+            "Fill": "jammer/bvfunk:BVFunkHorns",
+            "Main2": "jammer/bvfunk:BVFunkSus",
+            "Outro": "jammer/bvfunk:BVFunkEnd" 
+        },
+
+        "blues":
+        {
+            "Intro": "jammer/blues:BluesIntro",
+            "Main1": "jammer/blues:Blues",
+            "Fill": "jammer/blues:BluesTripleR",
+            "Main2": "jammer/blues:Blues1Sus",
+            "Outro": "jammer/blues:BluesEnd"
+        }
+
+    }
+
+}

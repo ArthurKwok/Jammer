@@ -12,8 +12,10 @@ class Producer(object):
     """
     holds objects of Song and Singer, and contains some util functions.
     """
-    song_settings=attr.ib(type=dict)
-    singer_settings=attr.ib(type=dict)
+    song_settings = attr.ib(type=dict)
+    singer_settings = attr.ib(type=dict)
+    leadsheet_path = attr.ib(type=str)
+    genre = attr.ib(type=str)
 
     # 
     # init functions
@@ -21,7 +23,7 @@ class Producer(object):
     def __attrs_post_init__(self):
         self.song = song.Song(**self.song_settings)
         self.singer = singer.Singer(**self.singer_settings)
-    
+
 
     #
     # static methods
@@ -83,6 +85,13 @@ class Producer(object):
     #
     # class methods
     #
+    #TODO
+    def gen_chord_prog(self, leadsheet_path):
+        """
+        Genrates chord progression according to the leadsheet.
+        """
+        pass
+
     def build(self, mix=0.5, output_path="../producer_output.wav", remove_temp=True):
         """
         build the final output .wav file.
@@ -128,4 +137,4 @@ if __name__ == "__main__":
                     #    "instrument": "Violin"}
 
     my_producer = Producer(song_settings, singer_settings)
-    my_producer.build(mix=0.3, remove_temp=False)
+    my_producer.build(mix=0.3, remove_temp=True)
