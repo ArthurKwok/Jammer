@@ -81,14 +81,15 @@ class Singer(object):
 
     @pattern_progression.validator
     def check_pp(self, attribute, value):
-        if len(value) != 3:
+        if len(value) != 4:
             raise ValueError(f"Invalid pattern progression length: {len(value)}")
-        if value[0] < 0 or value[1] < 0 or value[2] < 0 or \
-           value[1] < value[0] or value[2] < value[1] or value[2] < value[0]:
+        if value[0] < 0 or value[1] < 0 or value[2] < 0 or value[3] < 0 or \
+           value[1] < value[0] or value[2] < value[1] or value[2] < value[0] or \
+           value[3] < value[2] or value[3] < value[1] or value[3] < value[0]:
            raise ValueError(f"Invalid pattern progression value: {value}")
-        if value[0] > len(self.chord_progression.split("\n"))-1 or \
-           value[1] > len(self.chord_progression.split("\n"))-1 or \
-           value[2] > len(self.chord_progression.split("\n"))-1:
+
+        num_chords = len(self.chord_progression.split("\n"))-1
+        if value[0] > num_chords or value[1] > num_chords or value[2] > num_chords or value[3] > num_chords:
            raise ValueError(f"Invalid pattern progression, must be smaller than chord progression : {value}")
 
 

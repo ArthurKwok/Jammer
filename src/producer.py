@@ -1,28 +1,58 @@
 import os
-import music21 as m2
 import sox
 import attr
+import json
+import numpy as np
+import music21 as m2
+
 import singer
 import song
-# from singer import Singer
-# from song import Song
 
 @attr.s()
 class Producer(object):
     """
     holds objects of Song and Singer, and contains some util functions.
     """
-    song_settings = attr.ib(type=dict)
-    singer_settings = attr.ib(type=dict)
-    leadsheet_path = attr.ib(type=str)
-    genre = attr.ib(type=str)
+    # song_settings = attr.ib(type=dict)
+    # singer_settings = attr.ib(type=dict)
+    key = attr.ib(type=str)
+    genre_name = attr.ib(type=str)
+    leadsheet_path = attr.ib(type=str, default="./leadsheets.json")
 
     # 
     # init functions
     #
     def __attrs_post_init__(self):
-        self.song = song.Song(**self.song_settings)
-        self.singer = singer.Singer(**self.singer_settings)
+        with open(self.leadsheet_path, "r") as f:
+            f_json = json.load(f)
+            supported_genres = f_json["supported_genres"]
+        
+        if self.genre_name not in supported_genres:
+            raise ValueError(f"Unsupported genre: {self.genre_name}")
+
+        genre = f_json["genres"][self.genre_name]
+        
+        # Using lead sheet settings to generate Song and Singer settings
+        # generate chord progression
+        chord_prog, pattern_prog = self.gen_chord_prog(self.key, genre["chord_progression"])
+        # tempo = self.choose_tempo(genre["tempo_range"])
+        tempo = 120
+        singer_instrument = np.random.choice(genre["singer_instruments"])
+
+        song_settings = {"name": "my song",
+                        "genre": self.genre_name,
+                        "tempo": tempo,
+                        "chord_progression": chord_prog,
+                        "pattern_progression": pattern_prog}
+        singer_settings = {"tempo": tempo,
+                        "key": self.key,
+                        "time_signature": genre["time_signature"], 
+                        "chord_progression": chord_prog,
+                        "pattern_progression": pattern_prog,
+                        "instrument": singer_instrument}
+
+        self.song = song.Song(**song_settings)
+        self.singer = singer.Singer(**singer_settings)
 
 
     #
@@ -85,10 +115,34 @@ class Producer(object):
     #
     # class methods
     #
-    #TODO
-    def gen_chord_prog(self, leadsheet_path):
+    def gen_chord_prog(self, key, chord_progressions):
         """
         Genrates chord progression according to the leadsheet.
+
+        returns
+        -------
+        chord_prog: a string
+        pattern_prog: a list with four ints like [5, 7, 8, 15]
+        """
+        chord_prog = ""
+        pattern_prog = []
+
+        chord_prog += np.random.choice(chord_progressions["Intro"])
+        pattern_prog.append(len(chord_prog.split("\n")))
+        chord_prog += np.random.choice(chord_progressions["Main1"])
+        pattern_prog.append(len(chord_prog.split("\n")))
+        chord_prog += np.random.choice(chord_progressions["Fill"])
+        pattern_prog.append(len(chord_prog.split("\n")))
+        chord_prog += np.random.choice(chord_progressions["Main2"])
+        pattern_prog.append(len(chord_prog.split("\n")))
+        chord_prog += np.random.choice(chord_progressions["Outro"])
+
+        return chord_prog, pattern_prog
+
+    
+    def choose_tempo(self, tempo_range):
+        """
+        Randomly choose a tempo in the range.
         """
         pass
 
@@ -121,20 +175,19 @@ class Producer(object):
 
 
 if __name__ == "__main__":
-    cp = "D\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\n"
-    song_settings = {"name": "my song",
-                    "genre": "pop",
-                    "tempo": 110,
-                    "chord_progression": cp,
-                    "pattern_progression": [5, 8, 15]}
+    my_producer = Producer(key="D", genre_name="pop")
+    my_producer.build(mix=0.4, remove_temp=True)
+    # cp = "D\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\n"
+    # song_settings = {"name": "my song",
+    #                 "genre": "pop",
+    #                 "tempo": 110,
+    #                 "chord_progression": cp,
+    #                 "pattern_progression": [5, 8, 15]}
 
-    singer_settings = {"tempo": 110,
-                       "key": "D",
-                       "time_signature": "4/4", 
-                       "chord_progression": cp,
-                       "pattern_progression": [5, 9, 13],
-                       "instrument": "TenorSaxophone"}
-                    #    "instrument": "Violin"}
-
-    my_producer = Producer(song_settings, singer_settings)
-    my_producer.build(mix=0.3, remove_temp=True)
+    # singer_settings = {"tempo": 110,
+    #                    "key": "D",
+    #                    "time_signature": "4/4", 
+    #                    "chord_progression": cp,
+    #                    "pattern_progression": [5, 9, 13],
+    #                    "instrument": "TenorSaxophone"}
+    #                 #    "instrument": "Violin"}

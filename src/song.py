@@ -33,14 +33,15 @@ class Song(object):
 
     @pattern_progression.validator
     def check_pp(self, attribute, value):
-        if len(value) != 3:
+        if len(value) != 4:
             raise ValueError(f"Invalid pattern progression length: {len(value)}")
-        if value[0] < 0 or value[1] < 0 or value[2] < 0 or \
-           value[1] < value[0] or value[2] < value[1] or value[2] < value[0]:
+        if value[0] < 0 or value[1] < 0 or value[2] < 0 or value[3] < 0 or \
+           value[1] < value[0] or value[2] < value[1] or value[2] < value[0] or \
+           value[3] < value[2] or value[3] < value[1] or value[3] < value[0]:
            raise ValueError(f"Invalid pattern progression value: {value}")
-        if value[0] > len(self.chord_progression.split("\n"))-1 or \
-           value[1] > len(self.chord_progression.split("\n"))-1 or \
-           value[2] > len(self.chord_progression.split("\n"))-1:
+
+        num_chords = len(self.chord_progression.split("\n"))-1
+        if value[0] > num_chords or value[1] > num_chords or value[2] > num_chords or value[3] > num_chords:
            raise ValueError(f"Invalid pattern progression, must be smaller than chord progression : {value}")
 
     def __attrs_post_init__(self):
@@ -76,13 +77,13 @@ class Song(object):
         for bar_index, chord in enumerate(self.chord_progression.split("\n")[:-1]):
             if self.pattern_progression[0] == bar_index + 1:
                 mma_string += "\nGroove {}\n\n".format(self.groove["Main1"])
-            elif self.pattern_progression[1] == bar_index + 2:
-                mma_string += "\nGroove {}\n\n".format(self.groove["Fill"])
             elif self.pattern_progression[1] == bar_index + 1:
-                mma_string += "\nGroove {}\n\n".format(self.groove["Main2"])
+                mma_string += "\nGroove {}\n\n".format(self.groove["Fill"])
             elif self.pattern_progression[2] == bar_index + 1:
+                mma_string += "\nGroove {}\n\n".format(self.groove["Main2"])
+            elif self.pattern_progression[3] == bar_index + 1:
                 mma_string += "\nGroove {}\n\n".format(self.groove["Outro"])
-            
+
             mma_string += f"{bar_index+1}\t{chord}\n"
 
         mma_string += "\nz\nz!"
@@ -145,7 +146,7 @@ if __name__ == "__main__":
                     tempo=110,
                     chord_progression="D\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\n",
                     # chord_progression="Dm7\nG7\nCM7\nCM7\nDm7\nG7\nCM7\nCM7\nDm7\nG7\nCM7\nCM7\nDm7\nG7\nCM7\nCM7\n",
-                    pattern_progression=[5, 8, 15])
+                    pattern_progression=[5, 7, 8, 15])
 
     # print(my_song.build_midi("/home/jovyan/workspace/MMA-playground/fella1.mma"))
 
