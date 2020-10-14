@@ -17,4 +17,4 @@
 3. put OrpheusGM soundfont in ./downloads
 
 ## Run
-in any CLI type `python ./src/producer.py`
+in any CLI type `cd ./src && python producer.py`
