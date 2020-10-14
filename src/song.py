@@ -11,9 +11,12 @@ import json
 class Song(object):
     """Settings of a song accompaniment. Contains methods to generate .mma file and midi file.
 
-    @pattern_progression: list of ints of length 3, where to swtich grooves. 
-                          pattern_progression[0] is the starting bar of Main1, 1 for Main2, and 3 for Outro. 
-                          Bar count starts at 1, not 0.
+    Attributes
+    ----------
+    pattern_progression: list of ints of length 4
+        the number of measure to swtich grooves. 
+        pattern_progression[0] is the starting bar of Main1, 1 for Main2, and 3 for Outro. 
+        Bar count starts at 1, not 0.
     """
     name = attr.ib(type=str, default="untitled")
     genre = attr.ib(type=str)
@@ -62,9 +65,13 @@ class Song(object):
     # class methods
     #
     def build_mma(self, mma_path, verbose=False)->str:
-        """build mma file from Song class
+        """
+        build mma file from Song class.
 
-        return: path of generated .mma file
+        Returns
+        -------
+        mma_path : str
+            path of generated .mma file
         """
         if os.path.exists(mma_path) and verbose:
             print("File already exists: {}, overwriting.".format(mma_path))
@@ -103,9 +110,13 @@ class Song(object):
 
 
     def build_midi(self, mma_path, verbose=False)->str:
-        """build midi file from a existing mma file
+        """
+        Build midi file from a existing mma file.
 
-        return: path of generated .midi file
+        Returns
+        -------
+        midi_path : str
+            path of generated .midi file
         """
         stream = os.popen(f"mma {mma_path}")
         output = stream.read()
@@ -123,9 +134,13 @@ class Song(object):
 
 
     def build(self, mma_path, clear_temp=True, verbose=False)->str:
-        """directly build midi file from Song class
+        """
+        Directly build midi file from Song class.
 
-        return: path of generated .mma(if clear_temp==False) & .midi file
+        Returns
+        -------
+        midi_path : str
+            path of generated .mma(if clear_temp==False) & .midi file
         """
         self.build_mma(mma_path, verbose=verbose)
         midi_path = self.build_midi(mma_path, verbose=verbose)

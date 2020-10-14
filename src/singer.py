@@ -11,20 +11,27 @@ import music21 as m2
 class Singer(object):
     """Generates the melody. outputs a midi file contrains single track of melody.
 
-    Parameters
+    Attributes
     ----------
-    tempo: the BPM
-    key: key signature in music21 format.
-    chord_progression: the chords in ROMAN NUMERAL relative to key.
-    instrument: the instrument to use when generating midi file. Names are defined in General Midi protocol.
-                supported instruments (must be exact name): https://web.mit.edu/music21/doc/moduleReference/moduleInstrument.html
-                recommended: Violin, Flute, TenorSaxophone, ...
+    tempo : int
+        the BPM
+    key : str
+        key signature in music21 format.
+    chord_progression : str
+        e.g. "D\nBm\nG\nA7\nD\nBm\nG\nA7\nD\n", "D\nBm\nG\nA7\n"
+    instrument : str
+        must be in instruments.json/"supported_instruments"
+        the instrument to use when generating midi file. Names are defined in General Midi protocol.
+        supported instruments (must be exact name): https://web.mit.edu/music21/doc/moduleReference/moduleInstrument.html
 
     # note generator settings
     # recommend setting: speed=4/8/16, rand_vol=10, rand_trig=0.2
-    speed: must be power of 2, usually between 2 and 32.
-    rand_vol: range of random volume (0 to 127)
-    rand_trig: a possibility of notes being muted, 0 to 1 (0 will trigger all notes, 1 mutes all)
+    speed : int
+        must be power of 2, usually between 2 and 32.
+    rand_vol : int
+        range of random volume (0 to 127)
+    rand_trig : float
+        a possibility of notes being muted, 0 to 1 (0 will trigger all notes, 1 mutes all)
     """
 
     tempo = attr.ib(type=int)
@@ -36,6 +43,7 @@ class Singer(object):
     instrument_path = attr.ib(type=str, default="./instruments.json")
     sound_range = attr.ib(type=tuple, default=('C4', 'G5'))
     # note generation attrs
+    default_volume = attr.ib(type=int, default=90)
     speed = attr.ib(type=int, default=4)
     rand_vol = attr.ib(type=int, default=10)
     rand_trig = attr.ib(type=float, default=0.2)
@@ -77,7 +85,12 @@ class Singer(object):
     @tempo.validator
     def check_tempo(self, attribute, value):
         if value < 40 or value > 250:
-            raise ValueError(f"Invalid tempo value: {tempo}")
+            raise ValueError(f"Invalid tempo value: {value}")
+
+    @default_volume.validator
+    def check_vol(self, attribute, value):
+        if value < 0 or value > 127:
+            raise ValueError(f"Invalid default volume: {value}")
 
     @pattern_progression.validator
     def check_pp(self, attribute, value):
@@ -99,7 +112,7 @@ class Singer(object):
     def sing_chord(self):
         """
         a singer who only sings the chord pitches. fills self.melody.
-            basically same as a random arppegiator.
+        basically same as a random arppegiator.
         """
         default_volume = 90
         speed = np.random.choice(self.inst_settings["speed"])
@@ -138,7 +151,7 @@ class Singer(object):
             if singable_pitches is None:
                 raise ValueError(f"No singable pitches! chord: {current_chord}, key: {self.key}")
 
-            for i in range(int(speed*int(self.time_signature[0])/4)):
+            for i in range(int(speed * int(self.time_signature[0])/4)):
                 if np.random.rand() < self.inst_settings["rand_trig"]:
                     n = m2.note.Rest()
                 else:
@@ -174,14 +187,19 @@ class Singer(object):
 
         Parameters
         ----------
-        target_pitch: music21.interval.Interval object.
-        pitch_list: list of strings, each string is a pitch name, e.g. "G4"
-        prob_factor: the index of reverse probability. if bigger, the closer note will have higher probability.
-        prob_offset: offset when calculating inversed probability.
+        target_pitch : music21.interval.Interval 
+            the targe pitch to calcualte interval with
+        pitch_list : list of str
+            each string is a pitch name, e.g. "G4"
+        prob_factor : float
+            the index of reverse probability. if bigger, the closer note will have higher probability.
+        prob_offset : float
+            offset when calculating inversed probability.
 
         Returns
         -------
-        interval_p: the normalized probability of each note.
+        interval_p : list of float
+            the normalized probability of each note.
         """
         interval_to_rf = np.array([np.abs(m2.interval.Interval(target_pitch, m2.pitch.Pitch(p)).semitones) for p in pitch_list])
         interval_p = 1 / (interval_to_rf + prob_offset)

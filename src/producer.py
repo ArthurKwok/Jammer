@@ -72,9 +72,12 @@ class Producer(object):
 
         Parameters
         ----------
-        gain: the master gain. default value is 0.3 for fluidsynth, which is too small.
-        chorus: a binary boolean controlling the chorus switch. CAN NOT BE FLOAT!
-        reverb: a binary boolean controlling the reverb switch. CAN NOT BE FLOAT!
+        gain : float
+            the master gain. default value is 0.3 for fluidsynth, which is too small.
+        chorus : int 0 or 1
+            binary boolean controlling the chorus switch. CAN NOT BE FLOAT!
+        reverb: int 0 or 1
+            binary boolean controlling the reverb switch. CAN NOT BE FLOAT!
         """
         stream = os.popen(f"fluidsynth {soundfont_path} {midi_path} -F {audio_path} -g {gain} --chorus {chorus} --reverb {reverb} -o synth.min-note-length=1000")
         output = stream.read()
@@ -107,8 +110,8 @@ class Producer(object):
 
         Parameters
         ----------
-        mix: ratio of audio_in_1
-
+        mix : float
+            volume ratio of audio_in_1.
         """
 
         comb = sox.combine.Combiner()
@@ -125,8 +128,10 @@ class Producer(object):
 
         returns
         -------
-        chord_prog: a string
-        pattern_prog: a list with four ints like [5, 7, 8, 15]
+        chord_prog : str
+            e.g. "D\nBm\nG\nA7\nD\nBm\nG\nA7\nD\n", "D\nBm\nG\nA7\n"
+        pattern_prog : list of ints
+            four ints like [5, 7, 8, 15], the starting measure of each pattern.
         """
         chord_prog = ""
         pattern_prog = []
@@ -155,8 +160,8 @@ class Producer(object):
 
         Parameters
         ----------
-        remove_temp: whether to remove all the temp files.
-
+        remove_temp : boolean
+            whether to remove all the temp files.
         """
         try:
             os.mkdir("../temp/")
