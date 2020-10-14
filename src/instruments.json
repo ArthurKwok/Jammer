@@ -1,6 +1,9 @@
 {
     "_commemt": 
     [
+        "#Last modified: 14 Oct, 2020",
+        "#Author: Arthur Jinyue Guo jg5505@nyu.edu",
+
         "This is a manually edited json file to save instruments used by singer.py .",
         "Names must be exactly same as in this list: https://web.mit.edu/music21/doc/moduleReference/moduleInstrument.html"
     ],
@@ -9,7 +12,13 @@
     [
         "Violin",
         "Flute",
-        "TenorSaxophone"
+        "TenorSaxophone",
+        "Piano",
+        "Koto",
+        "Shakuhachi",
+        "Xylophone",
+        "ElectricOrgan",
+        "Guitar"
     ],
 
     "instruments":
@@ -18,7 +27,7 @@
         {
             "sound_range_low": "C4",
             "sound_range_high": "G5",
-            "speed": [4, 8, 16],
+            "speed": [2, 4, 8],
             "rand_vol": 10,
             "rand_trig": 0.2
         },
@@ -27,7 +36,7 @@
         {
             "sound_range_low": "C4",
             "sound_range_high": "G5",
-            "speed": [4, 8, 16],
+            "speed": [2, 4, 8],
             "rand_vol": 10,
             "rand_trig": 0.2
         },
@@ -36,6 +45,60 @@
         {
             "sound_range_low": "C3",
             "sound_range_high": "G5",
+            "speed": [4, 8],
+            "rand_vol": 10,
+            "rand_trig": 0.2
+        },
+
+        "Piano":
+        {
+            "sound_range_low": "C4",
+            "sound_range_high": "B6",
+            "speed": [4, 8, 16],
+            "rand_vol": 10,
+            "rand_trig": 0.3
+        },
+
+        "Koto":
+        {
+            "sound_range_low": "C4",
+            "sound_range_high": "C6",
+            "speed": [4, 8, 16],
+            "rand_vol": 10,
+            "rand_trig": 0.4
+        },
+
+        "Shakuhachi":
+        {
+            "sound_range_low": "C5",
+            "sound_range_high": "C7",
+            "speed": [2, 4],
+            "rand_vol": 10,
+            "rand_trig": 0.3
+        },
+
+        "Xylophone":
+        {
+            "sound_range_low": "G4",
+            "sound_range_high": "G6",
+            "speed": [8],
+            "rand_vol": 10,
+            "rand_trig": 0.3
+        },
+
+        "ElectricOrgan":
+        {
+            "sound_range_low": "C4",
+            "sound_range_high": "C7",
+            "speed": [4, 8],
+            "rand_vol": 10,
+            "rand_trig": 0.2
+        },
+
+        "Guitar":
+        {
+            "sound_range_low": "C4",
+            "sound_range_high": "C7",
             "speed": [4, 8, 16],
             "rand_vol": 10,
             "rand_trig": 0.2

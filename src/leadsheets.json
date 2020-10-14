@@ -1,12 +1,28 @@
 {
     "_commemt": 
     [
-        "This is a manually edited json file to save genres used by producer.py ."
+        "#Last modified: 14 Oct, 2020",
+        "#Author: Arthur Jinyue Guo jg5505@nyu.edu",
+ 
+        "This is a manually edited json file to save genres used by producer.py .",
+        "The key of each genre must be in supported_styles in styles.json",
+        "The value of singer_instruments must be in supported_instruments in instruments.json"
     ],
 
     "supported_genres": 
     [
-        "pop"
+        "pop",
+        "rock",
+        "jazz",
+        "folk",
+        "salsa",
+        "waltz",
+        "twist",
+        "spiritual",
+        "bolero",
+        "chacha",
+        "funk",
+        "blues"
     ],
 
     "genres":
@@ -16,14 +32,179 @@
             "time_signature": ["4/4"], 
             "chord_progression":
             {
-                "Intro": ["D\nBm\nG\nA7\nD\nBm\nG\nA7\nD\n"],
-                "Main1": ["D\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\n"],
-                "Fill":  ["G\nA7\n"],
-                "Main2": ["D\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\n"],
-                "Outro": ["A7\nD\nBm\nG\nA7\nD\n"]
+                "Intro": ["D\nBm\nG\nA7\nD\nBm\nG\nA7\nD\n", "D\nBm\nG\nA7\n"],
+                "Main1": ["D\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\n", "D\nBm\nG\nA7\nD\nBm\nG\nA7\n"],
+                "Fill":  ["G\nA7\n", "A7\n"],
+                "Main2": ["D\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\n", "D\nBm\nG\nA7\nD\n"],
+                "Outro": ["A7\nD\nBm\nG\nA7\nD\n", "E\nA7\nD\nD\n"]
             },
             "tempo_range": [100, 120],
-            "singer_instruments": ["Violin", "Flute", "TenorSaxophone"]
+            "singer_instruments": ["Xylophone", "Piano", "ElectricOrgan"]
+        },
+
+        "rock":
+        {
+            "time_signature": ["4/4"], 
+            "chord_progression":
+            {
+                "Intro": ["D\nD\nG\nA7\n"],
+                "Main1": ["Bm\nG\nD\nA7\nBm\nG\nD\nA7\n"],
+                "Fill":  ["G\nA7\n", "A7\n"],
+                "Main2": ["Bm\nG\nD\nA7\nBm\nG\nD\nA7\n"],
+                "Outro": ["Bm\nG\nD\nA7\nD\nD\n"]
+            },
+            "tempo_range": [110, 130],
+            "singer_instruments": ["ElectricOrgan"]
+        },
+
+        "jazz":
+        {
+            "time_signature": ["4/4"], 
+            "chord_progression":
+            {
+                "Intro": ["Em7\nA7\nDM7\nGM7\nC#m7\nF#7\nBm7\nA7\n"],
+                "Main1": ["Em7\nA7\nDM7\nGM7\nC#m7\nF#7\nBm7\nA7\n"],
+                "Fill":  ["Bm7\nA7\n"],
+                "Main2": ["C#m7\nF#7\nBm7\nE7\nAm7\nEm7\nA7\nDM7\nGM7\nC#m7\nF#7\n"],
+                "Outro": ["Bm7\nA7\nDM7\nDM7"]
+            },
+            "tempo_range": [90, 120],
+            "singer_instruments": ["Piano", "TenorSaxophone", "X"]
+        },
+
+        "folk":
+        {
+            "time_signature": ["4/4"], 
+            "chord_progression":
+            {
+                "Intro": ["D\nBm\nG\nA7\nD\nBm\nG\nA7\nD\n", "D\nBm\nG\nA7\n"],
+                "Main1": ["D\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\n", "D\nBm\nG\nA7\nD\nBm\nG\nA7\n"],
+                "Fill":  ["G\nA7\n", "A7\n"],
+                "Main2": ["D\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\n", "D\nBm\nG\nA7\nD\n"],
+                "Outro": ["A7\nD\nBm\nG\nA7\nD\n", "E\nA7\nD\nD\n"]
+            },
+            "tempo_range": [60, 100],
+            "singer_instruments": ["Flute", "Koto", "Shakuhachi"]
+        },
+
+        "salsa":
+        {
+            "time_signature": ["4/4"], 
+            "chord_progression":
+            {
+                "Intro": ["D\nBm\nG\nA7\nD\nBm\nG\nA7\nD\n", "D\nBm\nG\nA7\n"],
+                "Main1": ["D\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\n", "D\nBm\nG\nA7\nD\nBm\nG\nA7\n"],
+                "Fill":  ["G\nA7\n", "A7\n"],
+                "Main2": ["D\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\n", "D\nBm\nG\nA7\nD\n"],
+                "Outro": ["A7\nD\nBm\nG\nA7\nD\n", "E\nA7\nD\nD\n"]
+            },
+            "tempo_range": [100, 120],
+            "singer_instruments": ["Xylophone", "ElectricOrgan", "Piano"]
+        },
+
+        "waltz":
+        {
+            "time_signature": ["3/4"], 
+            "chord_progression":
+            {
+                "Intro": ["D\nBm\nG\nA7\nD\nBm\nG\nA7\nD\n", "D\nBm\nG\nA7\n"],
+                "Main1": ["D\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\n", "D\nBm\nG\nA7\nD\nBm\nG\nA7\n"],
+                "Fill":  ["G\nA7\n", "A7\n"],
+                "Main2": ["D\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\n", "D\nBm\nG\nA7\nD\n"],
+                "Outro": ["A7\nD\nBm\nG\nA7\nD\n", "E\nA7\nD\nD\n"]
+            },
+            "tempo_range": [100, 120],
+            "singer_instruments": ["Violin", "Piano"]
+        },
+
+        "twist":
+        {
+            "time_signature": ["4/4"], 
+            "chord_progression":
+            {
+                "Intro": ["D\nBm\nG\nA7\nD\nBm\nG\nA7\nD\n", "D\nBm\nG\nA7\n"],
+                "Main1": ["D\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\n", "D\nBm\nG\nA7\nD\nBm\nG\nA7\n"],
+                "Fill":  ["G\nA7\n", "A7\n"],
+                "Main2": ["D\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\n", "D\nBm\nG\nA7\nD\n"],
+                "Outro": ["A7\nD\nBm\nG\nA7\nD\n", "E\nA7\nD\nD\n"]
+            },
+            "tempo_range": [100, 120],
+            "singer_instruments": ["ElectricGuitar", "ElectricOrgan"]
+        },
+
+        "spiritual":
+        {
+            "time_signature": ["4/4"], 
+            "chord_progression":
+            {
+                "Intro": ["D\nBm\nG\nA7\nD\nBm\nG\nA7\nD\n", "D\nBm\nG\nA7\n"],
+                "Main1": ["D\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\n", "D\nBm\nG\nA7\nD\nBm\nG\nA7\n"],
+                "Fill":  ["G\nA7\n", "A7\n"],
+                "Main2": ["D\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\n", "D\nBm\nG\nA7\nD\n"],
+                "Outro": ["A7\nD\nBm\nG\nA7\nD\n", "E\nA7\nD\nD\n"]
+            },
+            "tempo_range": [100, 120],
+            "singer_instruments": ["ElectricOrgan", "Flute", "TenorSaxophone"]
+        },
+
+        "bolero":
+        {
+            "time_signature": ["4/4"], 
+            "chord_progression":
+            {
+                "Intro": ["D\nBm\nG\nA7\nD\nBm\nG\nA7\nD\n", "D\nBm\nG\nA7\n"],
+                "Main1": ["D\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\n", "D\nBm\nG\nA7\nD\nBm\nG\nA7\n"],
+                "Fill":  ["G\nA7\n", "A7\n"],
+                "Main2": ["D\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\n", "D\nBm\nG\nA7\nD\n"],
+                "Outro": ["A7\nD\nBm\nG\nA7\nD\n", "E\nA7\nD\nD\n"]
+            },
+            "tempo_range": [100, 120],
+            "singer_instruments": ["Piano", "Violin"]
+        },
+
+        "chacha":
+        {
+            "time_signature": ["4/4"], 
+            "chord_progression":
+            {
+                "Intro": ["D\nBm\nG\nA7\nD\nBm\nG\nA7\nD\n", "D\nBm\nG\nA7\n"],
+                "Main1": ["D\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\n", "D\nBm\nG\nA7\nD\nBm\nG\nA7\n"],
+                "Fill":  ["G\nA7\n", "A7\n"],
+                "Main2": ["D\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\n", "D\nBm\nG\nA7\nD\n"],
+                "Outro": ["A7\nD\nBm\nG\nA7\nD\n", "E\nA7\nD\nD\n"]
+            },
+            "tempo_range": [100, 120],
+            "singer_instruments": ["Violin", "Flute", "Xylophone", "ElectricOrgan"]
+        },
+
+        "funk":
+        {
+            "time_signature": ["4/4"], 
+            "chord_progression":
+            {
+                "Intro": ["D\nBm\nG\nA7\nD\nBm\nG\nA7\nD\n", "D\nBm\nG\nA7\n"],
+                "Main1": ["D\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\n", "D\nBm\nG\nA7\nD\nBm\nG\nA7\n"],
+                "Fill":  ["G\nA7\n", "A7\n"],
+                "Main2": ["D\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\n", "D\nBm\nG\nA7\nD\n"],
+                "Outro": ["A7\nD\nBm\nG\nA7\nD\n", "E\nA7\nD\nD\n"]
+            },
+            "tempo_range": [100, 120],
+            "singer_instruments": ["ElectricOrgan", "Guitar", "Piano"]
+        },
+
+        "blues":
+        {
+            "time_signature": ["4/4"], 
+            "chord_progression":
+            {
+                "Intro": ["D\nBm\nG\nA7\nD\nBm\nG\nA7\nD\n", "D\nBm\nG\nA7\n"],
+                "Main1": ["D\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\n", "D\nBm\nG\nA7\nD\nBm\nG\nA7\n"],
+                "Fill":  ["G\nA7\n", "A7\n"],
+                "Main2": ["D\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\n", "D\nBm\nG\nA7\nD\n"],
+                "Outro": ["A7\nD\nBm\nG\nA7\nD\n", "E\nA7\nD\nD\n"]
+            },
+            "tempo_range": [90, 130],
+            "singer_instruments": ["Guitar", "Piano", "ElectricOrgan"]
         }
     }
 }

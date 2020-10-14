@@ -1,4 +1,4 @@
-#Last modified: 25 Sep, 2020
+#Last modified: 14 Oct, 2020
 #Author: Arthur Jinyue Guo jg5505@nyu.edu
 
 import os
@@ -97,23 +97,24 @@ class Singer(object):
     # class methods
     #
     def sing_chord(self):
-        """a singer who only sings the chord pitches. fills self.melody.
+        """
+        a singer who only sings the chord pitches. fills self.melody.
             basically same as a random arppegiator.
         """
         default_volume = 90
         speed = np.random.choice(self.inst_settings["speed"])
         for current_chord in self.chords.elements:
             chord_tones = [pitch.name for pitch in current_chord.pitches]
-            singable_pitchs = []
+            singable_pitches = []
             for pitch in self.possible_pitches:
                 if pitch.name in chord_tones:
-                    singable_pitchs.append(pitch.nameWithOctave)
+                    singable_pitches.append(pitch.nameWithOctave)
 
-            for i in range(speed):
+            for i in range(int(speed*int(self.time_signature[0])/4)):
                 if np.random.rand() < self.inst_settings["rand_trig"]:
                     n = m2.note.Rest()
                 else:
-                    current_pitch = np.random.choice(singable_pitchs)
+                    current_pitch = np.random.choice(singable_pitches)
                     n = m2.note.Note(current_pitch)
                     n.volume = m2.volume.Volume(velocity=default_volume+int(self.inst_settings["rand_vol"]*(2*np.random.rand()-1)))
                 n.duration = m2.duration.Duration(4/speed)
@@ -129,20 +130,26 @@ class Singer(object):
         speed = np.random.choice(self.inst_settings["speed"])
         for current_chord in self.chords.elements[1:]:
             chord_tones = [pitch.name for pitch in current_chord.pitches]
-            singable_pitchs = []
+            singable_pitches = []
             for pitch in self.possible_pitches:
                 if pitch.name in chord_tones:
-                    singable_pitchs.append(pitch.nameWithOctave)
+                    singable_pitches.append(pitch.nameWithOctave)
 
-            for i in range(speed):
+            if singable_pitches is None:
+                raise ValueError(f"No singable pitches! chord: {current_chord}, key: {self.key}")
+
+            for i in range(int(speed*int(self.time_signature[0])/4)):
                 if np.random.rand() < self.inst_settings["rand_trig"]:
                     n = m2.note.Rest()
                 else:
                     if len(self.melody.notes) == 0:
-                        current_pitch = np.random.choice(singable_pitchs)
+                        current_pitch = np.random.choice(singable_pitches)
                     else:
-                        interval_p = self.interval_reversed_p(self.melody.notes[-1].pitch, singable_pitchs)
-                        current_pitch = np.random.choice(singable_pitchs, p=interval_p)
+                        interval_p = self.interval_reversed_p(self.melody.notes[-1].pitch, singable_pitches)
+                        try:
+                            current_pitch = np.random.choice(singable_pitches, p=interval_p)
+                        except:
+                            raise ValueError(f"Random choice failed! chord: {current_chord}, key: {self.key}")
                     n = m2.note.Note(current_pitch)
                     n.volume = m2.volume.Volume(velocity=default_volume+int(self.inst_settings["rand_vol"]*(2*np.random.rand()-1)))
                 n.duration = m2.duration.Duration(4/speed)
@@ -172,12 +179,12 @@ class Singer(object):
         prob_factor: the index of reverse probability. if bigger, the closer note will have higher probability.
         prob_offset: offset when calculating inversed probability.
 
-        Return
-        ------
+        Returns
+        -------
         interval_p: the normalized probability of each note.
         """
         interval_to_rf = np.array([np.abs(m2.interval.Interval(target_pitch, m2.pitch.Pitch(p)).semitones) for p in pitch_list])
-        interval_p = 1 / (interval_to_rf+prob_offset)
+        interval_p = 1 / (interval_to_rf + prob_offset)
         interval_p = interval_p ** prob_factor
         interval_p = interval_p / np.sum(interval_p)
         return interval_p
@@ -187,8 +194,8 @@ if __name__ == "__main__":
     my_singer = Singer(tempo=110, key="D", time_signature="4/4", 
                        instrument="TenorSaxophone",
                        chord_progression="D\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\n",
-                       pattern_progression=[5, 9, 13])
+                       pattern_progression=[5, 8, 9, 13])
     
     my_singer.sing_interval()
     my_singer.export_midi("../singer_output.mid", write_chords=False)
-    # Producer.render_audio(soundfont_path="../downloads/Orpheus_18.06.2020.sf2", midi_path="../singer_output.mid", audio_path="../singer_output.wav", verbose=True)
+    Producer.render_audio(soundfont_path="../downloads/Orpheus_18.06.2020.sf2", midi_path="../singer_output.mid", audio_path="../singer_output.wav", verbose=True)

@@ -1,3 +1,6 @@
+#Last modified: 14 Oct, 2020
+#Author: Arthur Jinyue Guo jg5505@nyu.edu
+
 import os
 import sox
 import attr
@@ -35,8 +38,7 @@ class Producer(object):
         # Using lead sheet settings to generate Song and Singer settings
         # generate chord progression
         chord_prog, pattern_prog = self.gen_chord_prog(self.key, genre["chord_progression"])
-        # tempo = self.choose_tempo(genre["tempo_range"])
-        tempo = 120
+        tempo = self.choose_tempo(genre["tempo_range"])
         singer_instrument = np.random.choice(genre["singer_instruments"])
 
         song_settings = {"name": "my song",
@@ -44,13 +46,15 @@ class Producer(object):
                         "tempo": tempo,
                         "chord_progression": chord_prog,
                         "pattern_progression": pattern_prog}
+
         singer_settings = {"tempo": tempo,
                         "key": self.key,
-                        "time_signature": genre["time_signature"], 
+                        "time_signature": np.random.choice(genre["time_signature"]), 
                         "chord_progression": chord_prog,
                         "pattern_progression": pattern_prog,
                         "instrument": singer_instrument}
 
+        # instantiate Song and Singer member
         self.song = song.Song(**song_settings)
         self.singer = singer.Singer(**singer_settings)
 
@@ -139,12 +143,11 @@ class Producer(object):
 
         return chord_prog, pattern_prog
 
-    
     def choose_tempo(self, tempo_range):
         """
         Randomly choose a tempo in the range.
         """
-        pass
+        return np.random.randint(tempo_range[0], tempo_range[1])
 
     def build(self, mix=0.5, output_path="../producer_output.wav", remove_temp=True):
         """
@@ -155,7 +158,10 @@ class Producer(object):
         remove_temp: whether to remove all the temp files.
 
         """
-        os.mkdir("../temp/")
+        try:
+            os.mkdir("../temp/")
+        except:
+            pass
 
         self.song.build("../temp/output.mma") # generates the accompany midi file
         self.singer.sing_interval() 
@@ -175,8 +181,8 @@ class Producer(object):
 
 
 if __name__ == "__main__":
-    my_producer = Producer(key="D", genre_name="pop")
-    my_producer.build(mix=0.4, remove_temp=True)
+    my_producer = Producer(key="D", genre_name="waltz")
+    my_producer.build(mix=0.5, remove_temp=True)
     # cp = "D\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\n"
     # song_settings = {"name": "my song",
     #                 "genre": "pop",

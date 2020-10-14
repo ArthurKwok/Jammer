@@ -1,6 +1,9 @@
 {
     "_commemt": 
     [
+        "#Last modified: 14 Oct, 2020",
+        "#Author: Arthur Jinyue Guo jg5505@nyu.edu",
+
         "This is a manually edited json file to save styles used by song.py .",
         "To add a new style, create an elment in supported styles,",
         "then add an element in styles with four elements: Intro, Main1, Main2 and Outro.",
