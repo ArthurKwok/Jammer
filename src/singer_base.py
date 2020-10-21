@@ -38,8 +38,17 @@ class SingerBase(object):
     with_chords: bool
         Whether to append the chords to the Stream. 
         will generate a piano accompaniment in the output midi file.
-    defaul_vaolume: int
+    defaul_volume: int
         The defaul volume of the singer, in range [1, 127].
+
+    # note generator shared settings
+    # recommend setting: speed=4/8/16, rand_vol=10, rand_trig=0.2
+    speed : int
+        must be power of 2, usually between 2 and 32.
+    rand_vol : int
+        range of random volume (0 to 127)
+    rand_trig : float
+        a possibility of notes being muted, 0 to 1 (0 will trigger all notes, 1 mutes all)
     """
     tempo = attr.ib(type=int)
     chord_progression = attr.ib(type=str)
@@ -51,6 +60,10 @@ class SingerBase(object):
     sound_range = attr.ib(type=tuple, default=('C4', 'G5'))
     with_chords = attr.ib(type=bool, default=False)
     default_volume = attr.ib(type=int, default=90)
+    # sing() parameters
+    speed = attr.ib(type=int, default=4)
+    rand_vol = attr.ib(type=int, default=10)
+    rand_trig = attr.ib(type=float, default=0.2)
 
     #
     # init functions 
@@ -108,8 +121,9 @@ class SingerBase(object):
            raise ValueError(f"Invalid pattern progression value: {value}")
 
         num_chords = len(self.chord_progression.split("\n"))-1
-        if value[0] > num_chords or value[1] > num_chords or value[2] > num_chords or value[3] > num_chords:
-           raise ValueError(f"Invalid pattern progression, must be smaller than chord progression : {value}")
+        if value[0] > num_chords or value[1] > num_chords or \
+           value[2] > num_chords or value[3] > num_chords:
+           raise ValueError(f"Invalid pattern progression, \must be smaller than chord progression : {value}")
 
 
     #
@@ -128,35 +142,6 @@ class SingerBase(object):
             self.s.append(self.chords)
         self.s.write("midi", midi_path)
         print(f"midi file written at {midi_path}")
-
-    @staticmethod
-    def interval_reversed_p(target_pitch, pitch_list, prob_factor=2, prob_offset=5)->list:
-        """
-        calculate the interval of the pitch to each element in the pitch list.
-        returns a normalized probability of each note, closer note has higher probability.
-
-        Parameters
-        ----------
-        target_pitch : music21.interval.Interval 
-            the targe pitch to calcualte interval with
-        pitch_list : list of str
-            each string is a pitch name, e.g. "G4"
-        prob_factor : float
-            the index of reverse probability. if bigger, the closer note will have higher probability.
-        prob_offset : float
-            offset when calculating inversed probability.
-
-        Returns
-        -------
-        interval_p : list of float
-            the normalized probability of each note.
-        """
-        interval_to_rf = np.array([np.abs(m2.interval.Interval(target_pitch, m2.pitch.Pitch(p)).semitones) for p in pitch_list])
-        interval_p = 1 / (interval_to_rf + prob_offset)
-        interval_p = interval_p ** prob_factor
-        interval_p = interval_p / np.sum(interval_p)
-        return interval_p
-
 
 # if __name__ == "__main__":
 #     my_singer = Singer(tempo=110, key="D", time_signature="4/4", 

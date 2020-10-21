@@ -14,21 +14,7 @@ from singer_base import SingerBase
 class SingerA(SingerBase):
     """
     A simple singer that is basically an arpeggiator with chord tones.
-
-    Parameters
-    ----------
-    speed : int
-        must be power of 2, usually between 2 and 32.
-    rand_vol : int
-        range of random volume (0 to 127)
-    rand_trig : float
-        a possibility of notes being muted, 0 to 1 (0 will trigger all notes, 1 mutes all)
-
-    # recommend setting: speed=4/8/16, rand_vol=10, rand_trig=0.2
     """
-    speed = attr.ib(type=int, default=4)
-    rand_vol = attr.ib(type=int, default=10)
-    rand_trig = attr.ib(type=float, default=0.2)
 
     # override SingerBase.sing()
     def sing(self):
