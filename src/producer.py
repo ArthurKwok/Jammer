@@ -1,14 +1,15 @@
-#Last modified: 14 Oct, 2020
-#Author: Arthur Jinyue Guo jg5505@nyu.edu
-
+"""
+Last modified: 14 Oct, 2020
+Author: Arthur Jinyue Guo jg5505@nyu.edu
+"""
 import os
 import sox
 import attr
 import json
 import numpy as np
 import music21 as m2
-
-import singer
+import singer_a
+import singer_b
 import song
 
 @attr.s()
@@ -16,8 +17,6 @@ class Producer(object):
     """
     holds objects of Song and Singer, and contains some util functions.
     """
-    # song_settings = attr.ib(type=dict)
-    # singer_settings = attr.ib(type=dict)
     key = attr.ib(type=str)
     genre_name = attr.ib(type=str)
     leadsheet_path = attr.ib(type=str, default="./leadsheets.json")
@@ -56,8 +55,7 @@ class Producer(object):
 
         # instantiate Song and Singer member
         self.song = song.Song(**song_settings)
-        self.singer = singer.Singer(**singer_settings)
-
+        self.singer = singer_b.SingerB(**singer_settings)
 
     #
     # static methods
@@ -84,7 +82,6 @@ class Producer(object):
         if verbose:
             print(output)
 
-
     @staticmethod
     def merge_midi(midi_in_1_path: str, midi_in_2_path: str, midi_out_path: str):
         """
@@ -101,7 +98,6 @@ class Producer(object):
         # s1.write("midi", midi_out_path)
         # print(f"midi file written at {midi_out_path}")
 
-
     @staticmethod
     def merge_audio(audio_in_1_path: str, audio_in_2_path: str, mix: float, audio_out_path: str):
         """
@@ -117,7 +113,6 @@ class Producer(object):
         comb = sox.combine.Combiner()
         comb.set_input_format(file_type=["wav", "wav"])
         comb.build([audio_in_1_path, audio_in_2_path], audio_out_path, "mix", [mix, 1-mix])
-
 
     #
     # class methods
@@ -169,7 +164,7 @@ class Producer(object):
             pass
 
         self.song.build("../temp/output.mma") # generates the accompany midi file
-        self.singer.sing_interval() 
+        self.singer.sing() 
         self.singer.export_midi("../temp/singer_output.mid") # generates the melody midi file
         Producer.render_audio(soundfont_path="../downloads/Orpheus_18.06.2020.sf2", midi_path="../temp/output.mid", audio_path="../temp/output.wav", verbose=True)
         Producer.render_audio(soundfont_path="../downloads/Orpheus_18.06.2020.sf2", midi_path="../temp/singer_output.mid", audio_path="../temp/singer_output.wav", verbose=True)
@@ -188,17 +183,3 @@ class Producer(object):
 if __name__ == "__main__":
     my_producer = Producer(key="D", genre_name="waltz")
     my_producer.build(mix=0.5, remove_temp=True)
-    # cp = "D\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\n"
-    # song_settings = {"name": "my song",
-    #                 "genre": "pop",
-    #                 "tempo": 110,
-    #                 "chord_progression": cp,
-    #                 "pattern_progression": [5, 8, 15]}
-
-    # singer_settings = {"tempo": 110,
-    #                    "key": "D",
-    #                    "time_signature": "4/4", 
-    #                    "chord_progression": cp,
-    #                    "pattern_progression": [5, 9, 13],
-    #                    "instrument": "TenorSaxophone"}
-    #                 #    "instrument": "Violin"}

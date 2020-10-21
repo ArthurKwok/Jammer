@@ -1,6 +1,7 @@
-#Last modified: 14 Oct, 2020
-#Author: Arthur Jinyue Guo jg5505@nyu.edu
-
+"""
+Last modified: 20 Oct, 2020
+Author: Arthur Jinyue Guo jg5505@nyu.edu
+"""
 import os
 import attr
 import json
@@ -9,7 +10,8 @@ import music21 as m2
 
 @attr.s()
 class Singer(object):
-    """Generates the melody. outputs a midi file contrains single track of melody.
+    """
+    Generates the melody. outputs a midi file contrains single track of melody.
 
     Attributes
     ----------
@@ -42,11 +44,13 @@ class Singer(object):
     time_signature = attr.ib(type=str, default="4/4")
     instrument_path = attr.ib(type=str, default="./instruments.json")
     sound_range = attr.ib(type=tuple, default=('C4', 'G5'))
+    with_chords = attr.ib(type=bool, default=False)
     # note generation attrs
     default_volume = attr.ib(type=int, default=90)
     speed = attr.ib(type=int, default=4)
     rand_vol = attr.ib(type=int, default=10)
     rand_trig = attr.ib(type=float, default=0.2)
+
 
     #
     # init functions 
@@ -67,17 +71,19 @@ class Singer(object):
         self.s = m2.stream.Stream([m2.tempo.MetronomeMark(number=self.tempo), 
                                 m2.key.Key(self.key), 
                                 m2.meter.TimeSignature(self.time_signature)])
-        instrument_class = getattr(m2.instrument, self.instrument)
-        self.melody = m2.stream.Part([instrument_class()])
+        self.instrument_class = getattr(m2.instrument, self.instrument)
+        self.melody = m2.stream.Part([self.instrument_class()])
         self.chords = m2.stream.Part([m2.instrument.Piano()])
 
+        self.num_measures = len(self.chord_progression.split("\n")[:-1])
         for chord in self.chord_progression.split("\n")[:-1]:
             c = m2.harmony.ChordSymbol(chord, duration=4)
             c.volume = m2.volume.Volume(velocity=70)
             self.chords.append(c)
         
         self.s.append(self.melody)
-        # self.s.append(self.chords)
+        if self.with_chords:
+            self.s.append(self.chords)
 
         # all the possible pitches within the sound range and in the key.
         self.possible_pitches = self.s.keySignature.getScale().getPitches(self.inst_settings["sound_range_low"], self.inst_settings["sound_range_high"])
@@ -134,7 +140,6 @@ class Singer(object):
 
                 self.melody.append(n)
 
-
     def sing_interval(self):
         """
         Sing according to interval with the previous note. closer note will have higher probability.
@@ -169,6 +174,58 @@ class Singer(object):
 
                 self.melody.append(n)
 
+    def sing_repeat(self):
+        """
+        Generates a pattern of several measures using sing_interval, then refine the generated melody, changing a little bit.
+        """
+        # 1. get the total number of measures
+        self.num_measures
+
+        # 2. fill the first several measures with sing_interval
+        motif_measures = 2 # 2-bar motif
+        
+        motif = m2.stream.Part([self.instrument_class()])
+        default_volume = 90
+        speed = np.random.choice(self.inst_settings["speed"])
+        for current_chord in self.chords.elements[1:motif_measures+1]:
+            chord_tones = [pitch.name for pitch in current_chord.pitches]
+            singable_pitches = []
+            for pitch in self.possible_pitches:
+                if pitch.name in chord_tones:
+                    singable_pitches.append(pitch.nameWithOctave)
+
+            if singable_pitches is None:
+                raise ValueError(f"No singable pitches! chord: {current_chord}, key: {self.key}")
+
+            for i in range(int(speed * int(self.time_signature[0])/4)):
+                if np.random.rand() < self.inst_settings["rand_trig"]:
+                    n = m2.note.Rest()
+                else:
+                    if len(motif.notes) == 0:
+                        current_pitch = np.random.choice(singable_pitches)
+                    else:
+                        interval_p = self.interval_reversed_p(motif.notes[-1].pitch, singable_pitches)
+                        try:
+                            current_pitch = np.random.choice(singable_pitches, p=interval_p)
+                        except:
+                            raise ValueError(f"Random choice failed! chord: {current_chord}, key: {self.key}")
+                    n = m2.note.Note(current_pitch)
+                    n.volume = m2.volume.Volume(velocity=default_volume+int(self.inst_settings["rand_vol"]*(2*np.random.rand()-1)))
+                n.duration = m2.duration.Duration(4/speed)
+
+                motif.append(n)
+
+        # 3. copy the first motif, change a little bit
+        num_notes = len(motif.elements)-1
+        ## probabilities of mofifying each note
+        base = 16
+        offset = 1
+        notes_prob = np.power(base, (np.arange(1+offset, num_notes+1+offset))/num_notes)
+        ## normalize probability
+        notes_prob = notes_prob / (np.max(notes_prob)+offset)
+
+        # 4. append changed motif to Stream
+        # 5. repeat until all measures are filled.
 
     def export_midi(self, midi_path, write_chords=False):
         """
@@ -177,7 +234,6 @@ class Singer(object):
             self.s.append(self.chords)
         self.s.write("midi", midi_path)
         print(f"midi file written at {midi_path}")
-
 
     @staticmethod
     def interval_reversed_p(target_pitch, pitch_list, prob_factor=2, prob_offset=5)->list:
@@ -210,10 +266,10 @@ class Singer(object):
 
 if __name__ == "__main__":
     my_singer = Singer(tempo=110, key="D", time_signature="4/4", 
-                       instrument="TenorSaxophone",
+                       instrument="Piano",
                        chord_progression="D\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\n",
                        pattern_progression=[5, 8, 9, 13])
     
-    my_singer.sing_interval()
-    my_singer.export_midi("../singer_output.mid", write_chords=False)
-    Producer.render_audio(soundfont_path="../downloads/Orpheus_18.06.2020.sf2", midi_path="../singer_output.mid", audio_path="../singer_output.wav", verbose=True)
+    my_singer.sing_repeat()
+    # my_singer.export_midi("../singer_output.mid", write_chords=False)
+    # Producer.render_audio(soundfont_path="../downloads/Orpheus_18.06.2020.sf2", midi_path="../singer_output.mid", audio_path="../singer_output.wav", verbose=True)

@@ -1,15 +1,15 @@
-#Last modified: 14 Oct, 2020
-#Author: Arthur Jinyue Guo jg5505@nyu.edu
-
+"""
+Last modified: 14 Oct, 2020
+Author: Arthur Jinyue Guo jg5505@nyu.edu
+"""
 import os
-# import numpy as np
-# import music21
 import attr
 import json
 
 @attr.s(kw_only=True)
 class Song(object):
-    """Settings of a song accompaniment. Contains methods to generate .mma file and midi file.
+    """
+    Settings of a song accompaniment. Contains methods to generate .mma file and midi file.
 
     Attributes
     ----------
@@ -108,7 +108,6 @@ class Song(object):
 
         return mma_path
 
-
     def build_midi(self, mma_path, verbose=False)->str:
         """
         Build midi file from a existing mma file.
@@ -132,7 +131,6 @@ class Song(object):
 
         return os.path.join(os.path.split(mma_path)[0], file_name)
 
-
     def build(self, mma_path, clear_temp=True, verbose=False)->str:
         """
         Directly build midi file from Song class.
@@ -151,8 +149,6 @@ class Song(object):
                 print(f"Removed file: {mma_path}")
 
         return midi_path        
-
-
 
 
 if __name__ == "__main__":
