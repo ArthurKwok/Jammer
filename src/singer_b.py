@@ -1,5 +1,5 @@
 """
-Last modified: 20 Oct, 2020
+Last modified: 21 Oct, 2020
 Author: Arthur Jinyue Guo jg5505@nyu.edu
 """
 import os
@@ -8,7 +8,7 @@ import json
 import numpy as np
 import music21 as m2
 
-from singer_base import SingerBase
+from singer_base import SingerBase, MusicTheoryError
 
 @attr.s()
 class SingerB(SingerBase):
@@ -33,7 +33,6 @@ class SingerB(SingerBase):
         """
         Sing according to interval with the previous note. closer note will have higher probability.
         """
-        default_volume = 90
         speed = np.random.choice(self.inst_settings["speed"])
         for current_chord in self.chords.elements[1:]:
             chord_tones = [pitch.name for pitch in current_chord.pitches]
@@ -43,7 +42,7 @@ class SingerB(SingerBase):
                     singable_pitches.append(pitch.nameWithOctave)
 
             if singable_pitches is None:
-                raise ValueError(f"No singable pitches! chord: {current_chord}, key: {self.key}")
+                raise MusicTheoryError(f"No singable pitches! chord: {current_chord}, key: {self.key}")
 
             for i in range(int(speed * int(self.time_signature[0])/4)):
                 if np.random.rand() < self.inst_settings["rand_trig"]:
@@ -59,13 +58,16 @@ class SingerB(SingerBase):
                         try:
                             current_pitch = np.random.choice(singable_pitches, p=interval_p)
                         except:
-                            raise ValueError(f"Random choice failed! chord: {current_chord}, key: {self.key}")
+                            raise MusicTheoryError(f"Random choice failed! chord: {current_chord}, key: {self.key}")
                     n = m2.note.Note(current_pitch)
-                    n.volume = m2.volume.Volume(velocity=default_volume+int(self.inst_settings["rand_vol"]*(2*np.random.rand()-1)))
+                    n.volume = m2.volume.Volume(velocity=self.default_volume+int(self.inst_settings["rand_vol"]*(2*np.random.rand()-1)))
                 n.duration = m2.duration.Duration(4/speed)
 
                 self.melody.append(n)
 
+    #
+    # util funcs
+    #
     def _interval_reversed_p(self, target_pitch, pitch_list, prob_factor=2, prob_offset=5)->list:
         """
         calculate the interval of the pitch to each element in the pitch list.
@@ -95,10 +97,11 @@ class SingerB(SingerBase):
 
 
 if __name__ == "__main__":
-    my_singer_b = SingerB(tempo=110, key="D", time_signature="4/4", 
+    my_singer = SingerB(tempo=110, key="D", time_signature="4/4", 
                        instrument="Piano",
                        chord_progression="D\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\n",
                        pattern_progression=[5, 8, 9, 13])
     
-    my_singer_b.sing()
-    print(my_singer_b.melody.elements)
+    my_singer.sing()
+    print(my_singer.melody.elements)
+    my_singer.export_midi("../singer_output.mid", write_chords=False)

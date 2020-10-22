@@ -1,5 +1,5 @@
 """
-Last modified: 20 Oct, 2020
+Last modified: 21 Oct, 2020
 Author: Arthur Jinyue Guo jg5505@nyu.edu
 """
 import os
@@ -22,7 +22,6 @@ class SingerA(SingerBase):
         a singer who only sings the chord pitches. fills self.melody.
         basically same as a random arppegiator.
         """
-        default_volume = 90
         speed = np.random.choice(self.inst_settings["speed"])
         for current_chord in self.chords.elements[1:]:
             chord_tones = [pitch.name for pitch in current_chord.pitches]
@@ -37,16 +36,16 @@ class SingerA(SingerBase):
                 else:
                     current_pitch = np.random.choice(singable_pitches)
                     n = m2.note.Note(current_pitch)
-                    n.volume = m2.volume.Volume(velocity=default_volume+int(self.inst_settings["rand_vol"]*(2*np.random.rand()-1)))
+                    n.volume = m2.volume.Volume(velocity=self.default_volume+int(self.inst_settings["rand_vol"]*(2*np.random.rand()-1)))
                 n.duration = m2.duration.Duration(4/speed)
 
                 self.melody.append(n)
 
 if __name__ == "__main__":
-    my_singer_a = SingerA(tempo=110, key="D", time_signature="4/4", 
+    my_singer = SingerA(tempo=110, key="D", time_signature="4/4", 
                        instrument="Piano",
                        chord_progression="D\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\n",
                        pattern_progression=[5, 8, 9, 13])
     
-    my_singer_a.sing()
-    print(my_singer_a.melody.elements)
+    my_singer.sing()
+    print(my_singer.melody.elements)

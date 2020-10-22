@@ -1,5 +1,5 @@
 """
-Last modified: 20 Oct, 2020
+Last modified: 21 Oct, 2020
 Author: Arthur Jinyue Guo jg5505@nyu.edu
 """
 import os
@@ -138,17 +138,30 @@ class SingerBase(object):
     def export_midi(self, midi_path, write_chords=False):
         """
         """
-        if write_chords:
+        if (write_chords is True) and (self.with_chords is False):
             self.s.append(self.chords)
         self.s.write("midi", midi_path)
         print(f"midi file written at {midi_path}")
 
-# if __name__ == "__main__":
-#     my_singer = Singer(tempo=110, key="D", time_signature="4/4", 
-#                        instrument="Piano",
-#                        chord_progression="D\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\n",
-#                        pattern_progression=[5, 8, 9, 13])
 
-#     my_singer.sing()
-#     # my_singer.export_midi("../singer_output.mid", write_chords=False)
-#     # Producer.render_audio(soundfont_path="../downloads/Orpheus_18.06.2020.sf2", midi_path="../singer_output.mid", audio_path="../singer_output.wav", verbose=True)
+class MusicTheoryError(Exception):
+    """
+    Error message of music theory. such as chord not in the key, etc.
+    """
+    def __init__(self, value):
+        self.value = value
+    def __str__(self):
+        return repr(self.value)
+
+
+# A sample of test main function.
+# Does not work for this base class, but you can use this if you override SingerBase.sing()
+if __name__ == "__main__":
+    my_singer = Singer(tempo=110, key="D", time_signature="4/4", 
+                       instrument="Piano",
+                       chord_progression="D\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\n",
+                       pattern_progression=[5, 8, 9, 13])
+
+    my_singer.sing()
+    my_singer.export_midi("../singer_output.mid", write_chords=False)
+    Producer.render_audio(soundfont_path="../downloads/Orpheus_18.06.2020.sf2", midi_path="../singer_output.mid", audio_path="../singer_output.wav", verbose=True)
