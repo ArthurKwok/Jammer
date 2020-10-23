@@ -43,12 +43,15 @@ class SingerC(SingerBase):
         measures_to_fill = self.num_measures
         motif = self._generate_motif()
         self.melody.append(motif.elements)
+        chord_index = self.motif_length - 1
 
-        measures_to_fill -= self.motif_length
-        while measures_to_fill - self.motif_length >= 0:
-            variation = self._modify_motif(motif)
+        while chord_index + self.motif_length <= self.num_measures:
+            variation = self._modify_motif(motif, self.chords.elements[chord_index:chord_index+self.motif_length])
             self.melody.append(variation.elements)
             measures_to_fill -= self.motif_length
+            chord_index += self.motif_length
+            if self.continue_develop:
+                motif = variation
 
     def _generate_motif(self)->m2.stream.Part:
         """
@@ -56,7 +59,7 @@ class SingerC(SingerBase):
         Basically the same as SingerB.sing().
         """
         motif = m2.stream.Part()
-        speed = np.random.choice(self.inst_settings["speed"])
+        self.speed = np.random.choice(self.inst_settings["speed"])
         for current_chord in self.chords.elements[1:self.motif_length+1]:
             chord_tones = [pitch.name for pitch in current_chord.pitches]
             singable_pitches = []
@@ -67,7 +70,7 @@ class SingerC(SingerBase):
             if singable_pitches is None:
                 raise MusicTheoryError(f"No singable pitches! chord: {current_chord}, key: {self.key}")
 
-            for i in range(int(speed * int(self.time_signature[0])/4)):
+            for i in range(int(self.speed * int(self.time_signature[0])/4)):
                 if np.random.rand() < self.inst_settings["rand_trig"]:
                     n = m2.note.Rest()
                 else:
@@ -84,21 +87,27 @@ class SingerC(SingerBase):
                             raise MusicTheoryError(f"Random choice failed! Maybe the chord is not in the key. chord: {current_chord}, key: {self.key}")
                     n = m2.note.Note(current_pitch)
                     n.volume = m2.volume.Volume(velocity=self.default_volume+int(self.inst_settings["rand_vol"]*(2*np.random.rand()-1)))
-                n.duration = m2.duration.Duration(4/speed)
+                n.duration = m2.duration.Duration(4/self.speed)
 
                 motif.append(n)
         return motif
 
     #TODO
-    def _modify_motif(self, original_motif):
+    def _modify_motif(self, original_motif, chord_progression):
         """
+        Parameters
+        ----------
+        original_motif : music21.stream.Part
+        chord_progression : list of music21.harmony.ChordSymbol
         """
         modified_motif = copy.deepcopy(original_motif)
         num_notes = len(modified_motif)
 
         # set prob distribution parameters
-        base = 16
-        offset = 1
+        # base = np.random.choice(range(2, 10))
+        # offset = np.random.choice(range(0, 16))
+        base = 5 * np.random.rand() + 1.1
+        offset = 3 * np.random.rand() + 0.1
         # calculate prob distribution list
         notes_prob = self._position_exponential_p(num_notes, base, offset)
         # roll the dice and decide which notes should be modified
@@ -111,24 +120,35 @@ class SingerC(SingerBase):
         # modify each note
         for i in notes_to_modify:
             target_note = modified_motif.elements[i]
+            if type(target_note) is m2.note.Rest:
+                continue
             #randomly choose one modification:
             #0. if the note is not chord tone, change it to a chord tone;
             #   if it is, change it to a none chord tone but key tone.
             #1. change note to a diatonic passing tone
             #2. change note to the same as the next tone
             #3. change note to key's 1, 3 or 5
-            modify_mode = np.random.choice(range(4))
-            if modify == 0:
+            modify_mode = np.random.choice(range(1))
+            if modify_mode == 0:
                 #0. if the note is not chord tone, change it to a chord tone;
                 #   if it is, change it to a none chord tone but key tone.
-                pass
-            elif modify == 1:
+                current_chord = chord_progression[int(i/self.speed)]
+                chord_tones = [pitch.name for pitch in current_chord.pitches]
+                singable_pitches = []
+                for pitch in self.possible_pitches:
+                    if pitch.name in chord_tones:
+                        singable_pitches.append(pitch)
+                if target_note.pitch not in current_chord.pitches:
+                    target_note.pitch = self._nearest_pitch(target_note.pitch, singable_pitches)
+                else:
+                    target_note.pitch = self._nearest_pitch(target_note.pitch, self.possible_pitches)
+            elif modify_mode == 1:
                 #1. change note to a diatonic passing tone
                 pass
-            elif modify == 2:
+            elif modify_mode == 2:
                 #2. change note to the same as the next tone
                 pass
-            elif modify == 3:
+            elif modify_mode == 3:
                 #3. change note to key's 1, 3 or 5
                 pass
 
@@ -166,24 +186,62 @@ class SingerC(SingerBase):
 
 
     def _position_exponential_p(self, num_notes, prob_base, prob_offset):
-        notes_prob = np.power(base, (np.arange(1+offset, num_notes+1+offset))/num_notes)
+        """
+        Generates a probability distribution that, later notes have higher probability to be changed.
+        
+        Parameters
+        ----------
+        num_notes : int
+        prob_base : float
+        prob_offset : float
+
+        Returns
+        -------
+        notes_prob : list of float
+            the normalized probability. All between 0 and 1.
+        """
+        notes_prob = np.power(prob_base, (np.arange(1+prob_offset, num_notes+1+prob_offset))/num_notes)
         ## normalize probability
-        notes_prob = notes_prob / (np.max(notes_prob)+offset)
+        notes_prob = notes_prob / (np.max(notes_prob)+prob_offset)
 
         return notes_prob
+
+    def _nearest_pitch(self, target_pitch, pitch_list):
+        """
+        Return the nearest pitch to target_pitch in pitch_list.
+
+        Parameters
+        ----------
+        target_pitch : music21.pitch.Pitch
+            pitch with octave.
+        pitch_list : list of music21.pitch.Pitch
+            pitch with octave
+        
+        Returns
+        -------
+        nearest_pitch : music21.pitch.Pitch
+        """
+        # if target_pitch is in pitch_list, remove it
+        for pitch in pitch_list:
+            if pitch.nameWithOctave == target_pitch.nameWithOctave:
+                pitch_list.remove(pitch)
+
+        interval_to_rf = np.array([np.abs(m2.interval.Interval(target_pitch, pit).semitones) for pit in pitch_list])
+        return pitch_list[np.argmin(interval_to_rf)]
+
 
 if __name__ == "__main__":
     my_singer = SingerC(tempo=110, key="D", time_signature="4/4", 
                        instrument="Piano",
                        motif_length=2,
-                       chord_progression="D\nBm\nG\nA7\n\
-                                          D\nBm\nG\nA7\n\
-                                          D\nBm\nG\nA7\n\
-                                          D\nBm\nG\nA7\n",
+                       prob_factor=4,
+                       default_volume=110,
+                       continue_develop=True,
+                       chord_progression="D\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\n",
                        pattern_progression=[5, 8, 9, 13])
     
     my_singer.sing()
-    print(my_singer.melody.elements)
+    # print(my_singer.melody.elements)
     my_singer.export_midi("../singer_output.mid", write_chords=True)
     from producer import Producer
     Producer.render_audio(soundfont_path="../downloads/Orpheus_18.06.2020.sf2", midi_path="../singer_output.mid", audio_path="../singer_output.oga", verbose=True)

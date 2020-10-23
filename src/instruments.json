@@ -53,8 +53,8 @@
         "Piano":
         {
             "sound_range_low": "C4",
-            "sound_range_high": "B6",
-            "speed": [4, 8, 16],
+            "sound_range_high": "C6",
+            "speed": [4, 8],
             "rand_vol": 10,
             "rand_trig": 0.3
         },
