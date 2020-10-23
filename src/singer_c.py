@@ -1,5 +1,5 @@
 """
-Last modified: 22 Oct, 2020
+Last modified: 23 Oct, 2020
 Author: Arthur Jinyue Guo jg5505@nyu.edu
 """
 import os
@@ -31,8 +31,8 @@ class SingerC(SingerBase):
         Parameter of SingerB._interval_reversed_p().
         offset when calculating inversed probability.
     """
-    continue_develop = attr.ib(type=bool, default=False)
-    motif_length = attr.ib(type=int, default=4)
+    continue_develop = attr.ib(type=bool, default=True)
+    motif_length = attr.ib(type=int, default=2)
     prob_factor = attr.ib(type=float, default=2)
     prob_offset = attr.ib(type=float, default=5)
 
@@ -95,6 +95,14 @@ class SingerC(SingerBase):
     #TODO
     def _modify_motif(self, original_motif, chord_progression):
         """
+        modify the original motif according to a probability distribution notes_prob.
+        the distribution is an exponential function parameterized by base and offset.
+        base and offset are randomly generated each time.
+
+        After notes_prob is generated, roll a dice to decide which notes are to be modified (notes_to_modify)
+
+        When modifying, randomly choose among four types of modifications
+
         Parameters
         ----------
         original_motif : music21.stream.Part
@@ -128,7 +136,7 @@ class SingerC(SingerBase):
             #1. change note to a diatonic passing tone
             #2. change note to the same as the next tone
             #3. change note to key's 1, 3 or 5
-            modify_mode = np.random.choice(range(1))
+            modify_mode = np.random.choice(range(2))
             if modify_mode == 0:
                 #0. if the note is not chord tone, change it to a chord tone;
                 #   if it is, change it to a none chord tone but key tone.
@@ -142,12 +150,21 @@ class SingerC(SingerBase):
                     target_note.pitch = self._nearest_pitch(target_note.pitch, singable_pitches)
                 else:
                     target_note.pitch = self._nearest_pitch(target_note.pitch, self.possible_pitches)
+
             elif modify_mode == 1:
                 #1. change note to a diatonic passing tone
-                pass
+                next_note = modified_motif.getElementAfterElement(target_note, [m2.note.Note])
+                prev_note = modified_motif.getElementBeforeOffset(target_note.offset, [m2.note.Note])
+                if next_note is None or prev_note is None:
+                    continue
+                target_pitch = m2.pitch.Pitch((next_note.pitch.midi + prev_note.pitch.midi) / 2)
+                target_pitch = self._nearest_pitch(target_pitch, self.possible_pitches)
+                target_note.pitch = target_pitch
+
             elif modify_mode == 2:
                 #2. change note to the same as the next tone
                 pass
+
             elif modify_mode == 3:
                 #3. change note to key's 1, 3 or 5
                 pass
@@ -231,17 +248,20 @@ class SingerC(SingerBase):
 
 
 if __name__ == "__main__":
-    my_singer = SingerC(tempo=110, key="D", time_signature="4/4", 
+    my_singer = SingerC(tempo=110, key="D", time_signature="3/4", 
                        instrument="Piano",
                        motif_length=2,
                        prob_factor=4,
-                       default_volume=110,
+                       default_volume=100,
                        continue_develop=True,
-                       chord_progression="D\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\n",
+                       chord_progression="D\nBm\nG\nA7\n"+
+                                         "D\nBm\nG\nA7\n"+
+                                         "D\nBm\nG\nA7\n"+
+                                         "D\nBm\nG\nA7\n",
                        pattern_progression=[5, 8, 9, 13])
     
     my_singer.sing()
     # print(my_singer.melody.elements)
-    my_singer.export_midi("../singer_output.mid", write_chords=True)
+    my_singer.export_midi("../singer_output.mid", write_chords=False)
     from producer import Producer
     Producer.render_audio(soundfont_path="../downloads/Orpheus_18.06.2020.sf2", midi_path="../singer_output.mid", audio_path="../singer_output.oga", verbose=True)

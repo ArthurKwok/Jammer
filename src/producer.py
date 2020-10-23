@@ -6,10 +6,12 @@ import os
 import sox
 import attr
 import json
+import soundfile as sf
 import numpy as np
 import music21 as m2
 import singer_a
 import singer_b
+import singer_c
 import song
 
 @attr.s()
@@ -48,14 +50,17 @@ class Producer(object):
 
         singer_settings = {"tempo": tempo,
                         "key": self.key,
-                        "time_signature": np.random.choice(genre["time_signature"]), 
+                        "time_signature": np.random.choice(genre["time_signature"]),
+                        "default_volume": 100,
                         "chord_progression": chord_prog,
                         "pattern_progression": pattern_prog,
                         "instrument": singer_instrument}
 
         # instantiate Song and Singer member
+        print(f"Song Settings: \n---- --------\n{song_settings}")
         self.song = song.Song(**song_settings)
-        self.singer = singer_b.SingerB(**singer_settings)
+        print(f"Singer Settings: \n------ --------\n{singer_settings}")
+        self.singer = singer_c.SingerC(**singer_settings)
 
     #
     # static methods
@@ -181,5 +186,7 @@ class Producer(object):
 
 
 if __name__ == "__main__":
-    my_producer = Producer(key="D", genre_name="waltz")
+    my_producer = Producer(key="D", genre_name="pop")
     my_producer.build(mix=0.5, remove_temp=True)
+    stream = os.popen(f"ffmpeg -y -hide_banner -loglevel warning -i ../producer_output.wav -vn -ar 44100 -ac 2 -b:a 128k ../producer_output.mp3")
+    output = stream.read()

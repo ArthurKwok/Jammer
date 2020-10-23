@@ -80,7 +80,7 @@
         "Xylophone":
         {
             "sound_range_low": "G4",
-            "sound_range_high": "G6",
+            "sound_range_high": "C6",
             "speed": [8],
             "rand_vol": 10,
             "rand_trig": 0.3

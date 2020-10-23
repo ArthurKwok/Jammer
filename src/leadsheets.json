@@ -38,8 +38,9 @@
                 "Main2": ["D\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\n", "D\nBm\nG\nA7\nD\n"],
                 "Outro": ["A7\nD\nBm\nG\nA7\nD\n", "E\nA7\nD\nD\n"]
             },
-            "tempo_range": [100, 120],
-            "singer_instruments": ["Xylophone", "Piano", "ElectricOrgan"]
+            "tempo_range": [95, 120],
+            "_singer_instruments": ["Xylophone", "Piano", "ElectricOrgan"],
+            "singer_instruments": ["Xylophone", "Piano"]
         },
 
         "rock":
