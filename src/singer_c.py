@@ -48,7 +48,7 @@ class SingerC(SingerBase):
         chord_index = (self.pattern_progression[0] - 1) + (self.motif_length) - 1
         motif = self._generate_motif()
         self.melody.append(motif.elements)
-        while chord_index + self.motif_length <= self.pattern_progression[2]:
+        while chord_index + self.motif_length < self.pattern_progression[1]:
             variation = self._modify_motif(motif, self.chords.elements[chord_index:chord_index+self.motif_length])
             self.melody.append(variation.elements)
             chord_index += self.motif_length
@@ -59,7 +59,7 @@ class SingerC(SingerBase):
         chord_index = (self.pattern_progression[2] - 1) + (self.motif_length) - 1
         motif = self._generate_motif()
         self.melody.append(motif.elements)
-        while chord_index + self.motif_length <= self.pattern_progression[3]:
+        while chord_index + self.motif_length < self.pattern_progression[3]:
             variation = self._modify_motif(motif, self.chords.elements[chord_index:chord_index+self.motif_length])
             self.melody.append(variation.elements)
             chord_index += self.motif_length
@@ -175,7 +175,7 @@ class SingerC(SingerBase):
                 target_note.pitch = target_pitch
 
             elif modify_mode == 2:
-                #2. change note to the same as the next tone
+                #2. change note to the same as the next tone or prev note
                 next_note = modified_motif.getElementAfterElement(target_note, [m2.note.Note])
                 if next_note is None:
                     continue
@@ -190,7 +190,7 @@ class SingerC(SingerBase):
     #
     # util funcs
     #
-    def _interval_reversed_p(self, target_pitch, pitch_list, prob_factor=2, prob_offset=5)->list:
+    def _interval_reversed_p(self, target_pitch:m2.interval.Interval, pitch_list: list, prob_factor=2, prob_offset=5)->list:
         """
         calculate the interval of the pitch to each element in the pitch list.
         returns a normalized probability of each note, closer note has higher probability.
@@ -218,7 +218,7 @@ class SingerC(SingerBase):
         return interval_p
 
 
-    def _position_exponential_p(self, num_notes, prob_base, prob_offset):
+    def _position_exponential_p(self, num_notes: int, prob_base: float, prob_offset: float)->list:
         """
         Generates a probability distribution that, later notes have higher probability to be changed.
         
@@ -237,9 +237,9 @@ class SingerC(SingerBase):
         ## normalize probability
         notes_prob = notes_prob / (np.max(notes_prob)+prob_offset)
 
-        return notes_prob
+        return list(notes_prob)
 
-    def _nearest_pitch(self, target_pitch, pitch_list):
+    def _nearest_pitch(self, target_pitch: m2.pitch.Pitch, pitch_list: list)->list:
         """
         Return the nearest pitch to target_pitch in pitch_list.
 
@@ -254,6 +254,9 @@ class SingerC(SingerBase):
         -------
         nearest_pitch : music21.pitch.Pitch
         """
+        if len(pitch_list) == 0:
+            raise ValueError(f"Pitch List is Empty!")
+
         # if target_pitch is in pitch_list, remove it
         for pitch in pitch_list:
             if pitch.nameWithOctave == target_pitch.nameWithOctave:
@@ -264,7 +267,7 @@ class SingerC(SingerBase):
 
 
 if __name__ == "__main__":
-    my_singer = SingerC(tempo=110, key="D", time_signature="3/4", 
+    my_singer = SingerC(tempo=110, key="D", time_signature="4/4", 
                        instrument="Piano",
                        motif_length=2,
                        prob_factor=4,
@@ -274,11 +277,12 @@ if __name__ == "__main__":
                                          "D\nBm\nG\nA7\n"+
                                          "D\nBm\nG\nA7\n"+
                                          "D\nBm\nG\nA7\n"+
+                                         "D\nBm\nG\nA7\n"+
                                          "D\nD\nD\nD\nD\n",
-                       pattern_progression=[5, 8, 9, 17])
+                       pattern_progression=[5, 12, 13, 17])
     
     my_singer.sing()
     # print(my_singer.melody.elements)
-    my_singer.export_midi("../singer_output.mid", write_chords=False)
+    my_singer.export_midi("../singer_output.mid", write_chords=True)
     from producer import Producer
     Producer.render_audio(soundfont_path="../downloads/Orpheus_18.06.2020.sf2", midi_path="../singer_output.mid", audio_path="../singer_output.oga", verbose=True)
