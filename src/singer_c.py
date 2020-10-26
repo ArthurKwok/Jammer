@@ -40,15 +40,28 @@ class SingerC(SingerBase):
     def sing(self):
         """
         """
-        measures_to_fill = self.num_measures
+        # Intro: append one rest note
+        rest_quarter_length = (self.pattern_progression[0] - 1) * int(self.time_signature[0])
+        self.melody.append(m2.note.Rest(quarterLength=rest_quarter_length))
+
+        # Main1: generate a motif, append motif, then generate modifications until beginnig of Main2
+        chord_index = (self.pattern_progression[0] - 1) + (self.motif_length) - 1
         motif = self._generate_motif()
         self.melody.append(motif.elements)
-        chord_index = self.motif_length - 1
-
-        while chord_index + self.motif_length <= self.num_measures:
+        while chord_index + self.motif_length <= self.pattern_progression[2]:
             variation = self._modify_motif(motif, self.chords.elements[chord_index:chord_index+self.motif_length])
             self.melody.append(variation.elements)
-            measures_to_fill -= self.motif_length
+            chord_index += self.motif_length
+            if self.continue_develop:
+                motif = variation
+        
+        # Main2: same as main1, generate until outro
+        chord_index = (self.pattern_progression[2] - 1) + (self.motif_length) - 1
+        motif = self._generate_motif()
+        self.melody.append(motif.elements)
+        while chord_index + self.motif_length <= self.pattern_progression[3]:
+            variation = self._modify_motif(motif, self.chords.elements[chord_index:chord_index+self.motif_length])
+            self.melody.append(variation.elements)
             chord_index += self.motif_length
             if self.continue_develop:
                 motif = variation
@@ -136,7 +149,7 @@ class SingerC(SingerBase):
             #1. change note to a diatonic passing tone
             #2. change note to the same as the next tone
             #3. change note to key's 1, 3 or 5
-            modify_mode = np.random.choice(range(2))
+            modify_mode = np.random.choice(range(4))
             if modify_mode == 0:
                 #0. if the note is not chord tone, change it to a chord tone;
                 #   if it is, change it to a none chord tone but key tone.
@@ -163,11 +176,14 @@ class SingerC(SingerBase):
 
             elif modify_mode == 2:
                 #2. change note to the same as the next tone
-                pass
+                next_note = modified_motif.getElementAfterElement(target_note, [m2.note.Note])
+                if next_note is None:
+                    continue
+                target_note.pitch = next_note.pitch
 
             elif modify_mode == 3:
                 #3. change note to key's 1, 3 or 5
-                pass
+                target_note.pitch =self._nearest_pitch(target_note.pitch, self.s.keySignature.getScale().pitchesFromScaleDegrees([1,3,5], self.inst_settings["sound_range_low"], self.inst_settings["sound_range_high"]))
 
         return modified_motif
 
@@ -257,8 +273,9 @@ if __name__ == "__main__":
                        chord_progression="D\nBm\nG\nA7\n"+
                                          "D\nBm\nG\nA7\n"+
                                          "D\nBm\nG\nA7\n"+
-                                         "D\nBm\nG\nA7\n",
-                       pattern_progression=[5, 8, 9, 13])
+                                         "D\nBm\nG\nA7\n"+
+                                         "D\nD\nD\nD\nD\n",
+                       pattern_progression=[5, 8, 9, 17])
     
     my_singer.sing()
     # print(my_singer.melody.elements)
