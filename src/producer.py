@@ -51,15 +51,15 @@ class Producer(object):
         singer_settings = {"tempo": tempo,
                         "key": self.key,
                         "time_signature": np.random.choice(genre["time_signature"]),
-                        "default_volume": 100,
+                        "default_volume": 110,
                         "chord_progression": chord_prog,
                         "pattern_progression": pattern_prog,
                         "instrument": singer_instrument}
 
         # instantiate Song and Singer member
-        print(f"Song Settings: \n---- --------\n{song_settings}")
+        print(f"Song Settings: \n--------------\n{song_settings}\n")
         self.song = song.Song(**song_settings)
-        print(f"Singer Settings: \n------ --------\n{singer_settings}")
+        print(f"Singer Settings: \n----------------\n{singer_settings}\n")
         self.singer = singer_c.SingerC(**singer_settings)
 
     #
@@ -186,7 +186,7 @@ class Producer(object):
 
 
 if __name__ == "__main__":
-    my_producer = Producer(key="D", genre_name="pop")
-    my_producer.build(mix=0.5, remove_temp=True)
+    my_producer = Producer(key="D", genre_name="spiritual")
+    my_producer.build(mix=0.5, remove_temp=False)
     stream = os.popen(f"ffmpeg -y -hide_banner -loglevel warning -i ../producer_output.wav -vn -ar 44100 -ac 2 -b:a 128k ../producer_output.mp3")
     output = stream.read()

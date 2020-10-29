@@ -32,7 +32,7 @@
             "time_signature": ["4/4"], 
             "chord_progression":
             {
-                "Intro": ["D\nBm\nG\nA7\nD\nBm\nG\nA7\nD\n", "D\nBm\nG\nA7\n"],
+                "Intro": ["D\nBm\nG\nA7\n", "Fm\nEm\nG\nA7\n"],
                 "Main1": ["D\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\n", "D\nBm\nG\nA7\nD\nBm\nG\nA7\n"],
                 "Fill":  ["G\nA7\n", "A7\n"],
                 "Main2": ["D\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\n", "D\nBm\nG\nA7\nD\n"],
@@ -55,7 +55,7 @@
                 "Outro": ["Bm\nG\nD\nA7\nD\nD\n"]
             },
             "tempo_range": [110, 130],
-            "singer_instruments": ["ElectricOrgan"]
+            "singer_instruments": ["ElectricOrgan", "ElectricGuitar"]
         },
 
         "jazz":
@@ -70,7 +70,7 @@
                 "Outro": ["Bm7\nA7\nDM7\nDM7"]
             },
             "tempo_range": [90, 120],
-            "singer_instruments": ["Piano", "TenorSaxophone", "X"]
+            "singer_instruments": ["Piano", "TenorSaxophone"]
         },
 
         "folk":
@@ -78,11 +78,11 @@
             "time_signature": ["4/4"], 
             "chord_progression":
             {
-                "Intro": ["D\nBm\nG\nA7\nD\nBm\nG\nA7\nD\n", "D\nBm\nG\nA7\n"],
+                "Intro": ["D\nBm\nG\nA7\n", "D\nBm\nEm\nA7\n"],
                 "Main1": ["D\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\n", "D\nBm\nG\nA7\nD\nBm\nG\nA7\n"],
                 "Fill":  ["G\nA7\n", "A7\n"],
                 "Main2": ["D\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\n", "D\nBm\nG\nA7\nD\n"],
-                "Outro": ["A7\nD\nBm\nG\nA7\nD\n", "E\nA7\nD\nD\n"]
+                "Outro": ["A7\nD\nG\nA7\nD\n", "E\nA7\nD\nD\n"]
             },
             "tempo_range": [60, 100],
             "singer_instruments": ["Flute", "Koto", "Shakuhachi"]
@@ -97,7 +97,7 @@
                 "Main1": ["D\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\n", "D\nBm\nG\nA7\nD\nBm\nG\nA7\n"],
                 "Fill":  ["G\nA7\n", "A7\n"],
                 "Main2": ["D\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\nD\nBm\nG\nA7\n", "D\nBm\nG\nA7\nD\n"],
-                "Outro": ["A7\nD\nBm\nG\nA7\nD\n", "E\nA7\nD\nD\n"]
+                "Outro": ["A7\nD\nBm\nA7\nD\n", "E\nA7\nD\nD\n"]
             },
             "tempo_range": [100, 120],
             "singer_instruments": ["Xylophone", "ElectricOrgan", "Piano"]

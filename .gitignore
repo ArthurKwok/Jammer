@@ -2,6 +2,7 @@
 *.wav
 *.oga
 *.mmaDB
+*.html
 __pycache__/
 !output_pop.oga
 downloads/
