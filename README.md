@@ -7,7 +7,7 @@
 ### linux packages
 * fluidsynth
 * SoX
-* MMA 20.02
+* MMA 20.02: https://www.mellowood.ca/mma/
 ### others
 * OrpheusGM Soundfont: https://musical-artifacts.com/artifacts/1213
   
